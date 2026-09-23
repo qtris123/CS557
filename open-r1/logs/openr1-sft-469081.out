@@ -1,0 +1,89 @@
+============================================
+  Open-R1 SFT Test Job
+  Job ID:    469081
+  Node:      scholar-j001
+  GPU:       0
+  Time:      Tue Sep 22 05:34:28 PM EDT 2026
+============================================
+Tue Sep 22 17:34:28 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     Off |   00000000:3B:00.0 Off |                    0 |
+|  0%   30C    P8             21W /  300W |       0MiB /  46068MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+📊 GPU monitor started (PID=681681)
+=== [2026-09-22 17:34:29] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 0, 46068, 30, 21.41
+───────────────────────────────────────────────
+=== [2026-09-22 17:34:44] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 0, 46068, 30, 21.42
+───────────────────────────────────────────────
+[2026-09-22 17:34:54,539] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+=== [2026-09-22 17:34:59] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 6173, 46068, 33, 69.48
+───────────────────────────────────────────────
+Warning: The cache directory for DeepSpeed Triton autotune, /home/vo43/.triton/autotune, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+=== [2026-09-22 17:35:14] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 94, 24329, 46068, 44, 153.46
+───────────────────────────────────────────────
+=== [2026-09-22 17:35:29] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 36211, 46068, 48, 217.52
+───────────────────────────────────────────────
+=== [2026-09-22 17:35:44] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 72, 36237, 46068, 59, 206.53
+───────────────────────────────────────────────
+=== [2026-09-22 17:35:59] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 81, 36417, 46068, 65, 204.42
+───────────────────────────────────────────────
+=== [2026-09-22 17:36:14] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 81, 36417, 46068, 71, 263.88
+───────────────────────────────────────────────
+=== [2026-09-22 17:36:29] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 99, 100, 36417, 46068, 75, 274.67
+───────────────────────────────────────────────
+=== [2026-09-22 17:36:44] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 89, 36417, 46068, 76, 280.28
+───────────────────────────────────────────────
+=== [2026-09-22 17:36:59] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 84, 36419, 46068, 78, 287.16
+───────────────────────────────────────────────
+=== [2026-09-22 17:37:14] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 84, 36419, 46068, 79, 293.67
+───────────────────────────────────────────────
+=== [2026-09-22 17:37:29] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 100, 85, 36419, 46068, 78, 248.45
+───────────────────────────────────────────────
+=== [2026-09-22 17:37:44] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 36419, 46068, 64, 85.89
+───────────────────────────────────────────────
+=== [2026-09-22 17:37:59] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 9, 0, 36419, 46068, 58, 81.75

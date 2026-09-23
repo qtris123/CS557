@@ -1,0 +1,65 @@
+============================================
+  Open-R1 SFT Test Job
+  Job ID:    469069
+  Node:      scholar-h002
+  GPU:       0
+  Time:      Tue Sep 22 05:10:03 PM EDT 2026
+============================================
+📊 GPU monitor started (PID=694215)
+=== [2026-09-22 17:10:03] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 143, 24576, 30, 27.35
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.82
+───────────────────────────────────────────────
+=== [2026-09-22 17:10:18] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.56
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.91
+───────────────────────────────────────────────
+=== [2026-09-22 17:10:33] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.34
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.79
+───────────────────────────────────────────────
+=== [2026-09-22 17:10:48] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.26
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.81
+───────────────────────────────────────────────
+=== [2026-09-22 17:11:04] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.35
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.90
+───────────────────────────────────────────────
+=== [2026-09-22 17:11:19] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.35
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.80
+───────────────────────────────────────────────
+=== [2026-09-22 17:11:34] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.26
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.79
+───────────────────────────────────────────────
+=== [2026-09-22 17:11:49] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.35
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.70
+───────────────────────────────────────────────
+=== [2026-09-22 17:12:04] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.56
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.91
+───────────────────────────────────────────────
+=== [2026-09-22 17:12:19] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 145, 24576, 30, 27.36
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.81
+───────────────────────────────────────────────
+=== [2026-09-22 17:12:35] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A30, [N/A], [N/A], 5926, 24576, 31, 48.59
+NVIDIA A30, [N/A], [N/A], 143, 24576, 32, 29.79
+───────────────────────────────────────────────
+Job finished at: Tue Sep 22 05:12:36 PM EDT 2026
+📊 GPU monitor stopped.
