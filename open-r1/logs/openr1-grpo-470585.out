@@ -1,0 +1,317 @@
+============================================
+  Open-R1 GRPO Test Job
+  Job ID:    470585
+  Node:      scholar-j000
+  GPU:       0
+  Time:      Mon Sep 28 02:28:56 AM EDT 2026
+============================================
+📊 GPU monitor started (PID=3059709)
+=== [2026-09-28 02:28:56] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 0, 46068, 27, 21.19
+───────────────────────────────────────────────
+INFO 09-28 02:29:11 [importing.py:53] Triton module has been replaced with a placeholder.
+INFO 09-28 02:29:11 [__init__.py:239] Automatically detected platform cuda.
+=== [2026-09-28 02:29:11] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 3, 46068, 27, 21.14
+───────────────────────────────────────────────
+2026-09-28 02:29:13 - WARNING - __main__ - Process rank: 0, device: cuda:0, n_gpu: 1 distributed training: True, 16-bits training: False
+2026-09-28 02:29:13 - INFO - __main__ - Model parameters ModelConfig(model_name_or_path='Qwen/Qwen2.5-1.5B-Instruct', model_revision='main', torch_dtype='bfloat16', trust_remote_code=False, attn_implementation='flash_attention_2', use_peft=False, lora_r=16, lora_alpha=32, lora_dropout=0.05, lora_target_modules=None, lora_modules_to_save=None, lora_task_type='CAUSAL_LM', use_rslora=False, use_dora=False, load_in_8bit=False, load_in_4bit=False, bnb_4bit_quant_type='nf4', use_bnb_nested_quant=False)
+2026-09-28 02:29:13 - INFO - __main__ - Script parameters GRPOScriptArguments(dataset_name='open-r1/OpenR1-Math-220k', dataset_config=None, dataset_train_split='train', dataset_test_split='test', gradient_checkpointing_use_reentrant=False, ignore_bias_buffers=False, dataset_mixture=None, reward_funcs=['accuracy', 'format', 'tag_count'], cosine_min_value_wrong=0.0, cosine_max_value_wrong=-0.5, cosine_min_value_correct=0.5, cosine_max_value_correct=1.0, cosine_max_len=1000, repetition_n_grams=3, repetition_max_penalty=-1.0, code_language='python', code_eval_test_batch_size=1, code_eval_scoring_mode='weighted_sum', parallel_code_exec_per_proc=2, dataset_prompt_column='problem', e2b_router_url=None, morph_router_url=None, code_provider='e2b', ioi_provider='piston', max_completion_len=16384, soft_punish_cache=4096)
+2026-09-28 02:29:13 - INFO - __main__ - Training parameters GRPOConfig(
+_n_gpu=1,
+accelerator_config={'split_batches': False, 'dispatch_batches': None, 'even_batches': True, 'use_seedable_sampler': True, 'non_blocking': False, 'gradient_accumulation_kwargs': None, 'use_configured_state': False},
+adafactor=False,
+adam_beta1=0.9,
+adam_beta2=0.999,
+adam_epsilon=1e-08,
+auto_find_batch_size=False,
+average_tokens_across_devices=False,
+batch_eval_metrics=False,
+benchmarks=[],
+beta=0.04,
+bf16=True,
+bf16_full_eval=False,
+cache_implementation=None,
+callbacks=[],
+chat_template=None,
+data_seed=None,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_persistent_workers=False,
+dataloader_pin_memory=True,
+dataloader_prefetch_factor=None,
+ddp_backend=None,
+ddp_broadcast_buffers=None,
+ddp_bucket_cap_mb=None,
+ddp_find_unused_parameters=None,
+ddp_timeout=1800,
+debug=[],
+deepspeed=None,
+delta=None,
+disable_dropout=False,
+disable_tqdm=False,
+do_eval=False,
+do_predict=False,
+do_train=False,
+ds3_gather_for_generation=True,
+epsilon=0.2,
+epsilon_high=None,
+eval_accumulation_steps=None,
+eval_delay=0,
+eval_do_concat_batches=True,
+eval_on_start=False,
+eval_steps=None,
+eval_strategy=IntervalStrategy.NO,
+eval_use_gather_object=False,
+fp16=False,
+fp16_backend=auto,
+fp16_full_eval=False,
+fp16_opt_level=O1,
+fsdp=[],
+fsdp_config={'min_num_params': 0, 'xla': False, 'xla_fsdp_v2': False, 'xla_fsdp_grad_ckpt': False},
+fsdp_min_num_params=0,
+fsdp_transformer_layer_cls_to_wrap=None,
+full_determinism=False,
+generation_batch_size=8,
+gradient_accumulation_steps=2,
+gradient_checkpointing=True,
+gradient_checkpointing_kwargs={'use_reentrant': False},
+greater_is_better=None,
+group_by_length=False,
+half_precision_backend=auto,
+hub_always_push=False,
+hub_model_id=Qwen2.5-1.5B-Open-R1-GRPO,
+hub_model_revision=main,
+hub_private_repo=None,
+hub_strategy=HubStrategy.EVERY_SAVE,
+hub_token=<HUB_TOKEN>,
+ignore_data_skip=False,
+include_for_metrics=[],
+include_inputs_for_metrics=False,
+include_num_input_tokens_seen=False,
+include_tokens_per_second=False,
+jit_mode_eval=False,
+label_names=None,
+label_smoothing_factor=0.0,
+learning_rate=2e-05,
+length_column_name=length,
+load_best_model_at_end=False,
+local_rank=0,
+log_completions=True,
+log_level=info,
+log_level_replica=warning,
+log_on_each_node=True,
+logging_dir=data/test-grpo-1.5b/runs/Sep28_02-29-13_scholar-j000.rcac.purdue.edu,
+logging_first_step=True,
+logging_nan_inf_filter=True,
+logging_steps=1,
+logging_strategy=IntervalStrategy.STEPS,
+loss_type=bnpo,
+lr_scheduler_kwargs={},
+lr_scheduler_type=SchedulerType.COSINE,
+mask_truncated_completions=False,
+max_completion_length=1024,
+max_grad_norm=1.0,
+max_prompt_length=512,
+max_steps=15,
+metric_for_best_model=None,
+min_p=None,
+model_init_kwargs=None,
+mp_parameters=,
+neftune_noise_alpha=None,
+no_cuda=False,
+num_completions_to_print=0,
+num_generations=4,
+num_iterations=1,
+num_train_epochs=1,
+optim=OptimizerNames.ADAMW_TORCH,
+optim_args=None,
+optim_target_modules=None,
+output_dir=data/test-grpo-1.5b,
+overwrite_hub_revision=False,
+overwrite_output_dir=True,
+past_index=-1,
+per_device_eval_batch_size=16,
+per_device_train_batch_size=4,
+prediction_loss_only=False,
+push_to_hub=False,
+push_to_hub_model_id=None,
+push_to_hub_organization=None,
+push_to_hub_revision=False,
+push_to_hub_token=<PUSH_TO_HUB_TOKEN>,
+ray_scope=last,
+ref_model_mixup_alpha=0.6,
+ref_model_sync_steps=512,
+remove_unused_columns=False,
+repetition_penalty=1.0,
+report_to=[],
+restore_callback_states_from_checkpoint=False,
+resume_from_checkpoint=None,
+reward_weights=[1.0, 1.0, 1.0],
+run_name=data/test-grpo-1.5b,
+save_on_each_node=False,
+save_only_model=False,
+save_safetensors=True,
+save_steps=500,
+save_strategy=SaveStrategy.EPOCH,
+save_total_limit=1,
+scale_rewards=True,
+seed=42,
+shuffle_dataset=True,
+skip_memory_metrics=True,
+steps_per_generation=2,
+sync_ref_model=False,
+system_prompt=You are a helpful AI Assistant that provides well-reasoned and detailed responses. You first think about the reasoning process as an internal monologue and then provide the user with the answer. Respond in the following format: <think>
+...
+</think>
+<answer>
+...
+</answer>,
+temperature=1.0,
+tf32=None,
+top_k=None,
+top_p=1.0,
+torch_compile=False,
+torch_compile_backend=None,
+torch_compile_mode=None,
+torch_empty_cache_steps=None,
+torchdynamo=None,
+tpu_metrics_debug=False,
+tpu_num_cores=None,
+use_cpu=False,
+use_ipex=False,
+use_legacy_prediction_loop=False,
+use_liger_kernel=False,
+use_liger_loss=False,
+use_mps_device=False,
+use_vllm=True,
+vllm_gpu_memory_utilization=0.3,
+vllm_guided_decoding_regex=None,
+vllm_mode=colocate,
+vllm_server_base_url=None,
+vllm_server_host=0.0.0.0,
+vllm_server_port=8000,
+vllm_server_timeout=240.0,
+vllm_tensor_parallel_size=1,
+wandb_entity=None,
+wandb_log_unique_prompts=True,
+wandb_project=None,
+wandb_run_group=None,
+warmup_ratio=0.1,
+warmup_steps=0,
+weight_decay=0.0,
+)
+2026-09-28 02:29:14 - INFO - datasets.builder - Found cached dataset open_r1-math-220k (/scratch/scholar/vo43/huggingface/datasets/open-r1___open_r1-math-220k/default/0.0.0/e4e141ec9dea9f8326f4d347be56105859b2bd68)
+2026-09-28 02:29:14 - INFO - __main__ - *** Loading model ***
+2026-09-28 02:29:15 - INFO - datasets.arrow_dataset - Caching processed dataset at /scratch/scholar/vo43/huggingface/datasets/open-r1___open_r1-math-220k/default/0.0.0/e4e141ec9dea9f8326f4d347be56105859b2bd68/cache-c740c6d118e6f051.arrow
+=== [2026-09-28 02:29:26] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 3, 46068, 27, 21.19
+───────────────────────────────────────────────
+=== [2026-09-28 02:29:41] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 9, 0, 731, 46068, 28, 35.50
+───────────────────────────────────────────────
+[2026-09-28 02:29:44,821] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+=== [2026-09-28 02:29:56] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 6177, 46068, 31, 69.73
+───────────────────────────────────────────────
+Warning: The cache directory for DeepSpeed Triton autotune, /scratch/scholar/vo43/.triton, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+INFO 09-28 02:29:57 [config.py:717] This model supports multiple tasks: {'classify', 'embed', 'generate', 'reward', 'score'}. Defaulting to 'generate'.
+INFO 09-28 02:29:57 [config.py:1729] Disabling V1 multiprocessing for external launcher.
+INFO 09-28 02:29:57 [llm_engine.py:240] Initializing a V0 LLM engine (v0.8.5.post1) with config: model='Qwen/Qwen2.5-1.5B-Instruct', speculative_config=None, tokenizer='Qwen/Qwen2.5-1.5B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=1536, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='xgrammar', reasoning_backend=None), observability_config=ObservabilityConfig(show_hidden_metrics=False, otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=Qwen/Qwen2.5-1.5B-Instruct, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=None, chunked_prefill_enabled=False, use_async_output_proc=True, disable_mm_preprocessor_cache=False, mm_processor_kwargs=None, pooler_config=None, compilation_config={"splitting_ops":[],"compile_sizes":[],"cudagraph_capture_sizes":[8,4,2,1],"max_capture_size":8}, use_cached_outputs=False, 
+INFO 09-28 02:29:59 [cuda.py:292] Using Flash Attention backend.
+INFO 09-28 02:29:59 [parallel_state.py:1004] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, TP rank 0
+INFO 09-28 02:29:59 [model_runner.py:1108] Starting to load model Qwen/Qwen2.5-1.5B-Instruct...
+INFO 09-28 02:29:59 [weight_utils.py:265] Using model weights format ['*.safetensors']
+INFO 09-28 02:30:08 [weight_utils.py:281] Time spent downloading weights for Qwen/Qwen2.5-1.5B-Instruct: 9.385878 seconds
+INFO 09-28 02:30:09 [weight_utils.py:315] No model.safetensors.index.json found in remote.
+=== [2026-09-28 02:30:11] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 9, 0, 9161, 46068, 32, 71.00
+───────────────────────────────────────────────
+INFO 09-28 02:30:12 [loader.py:458] Loading weights took 3.21 seconds
+INFO 09-28 02:30:12 [model_runner.py:1140] Model loading took 2.8833 GiB and 12.878267 seconds
+INFO 09-28 02:30:14 [worker.py:287] Memory profiling takes 1.78 seconds
+INFO 09-28 02:30:14 [worker.py:287] the current vLLM instance can use total_gpu_memory (44.42GiB) x gpu_memory_utilization (0.30) = 13.33GiB
+INFO 09-28 02:30:14 [worker.py:287] model weights take 2.88GiB; non_torch_memory takes 0.06GiB; PyTorch activation peak memory takes 0.13GiB; the rest of the memory reserved for KV Cache is 10.25GiB.
+INFO 09-28 02:30:14 [executor_base.py:112] # cuda blocks: 23992, # CPU blocks: 9362
+INFO 09-28 02:30:14 [executor_base.py:117] Maximum concurrency for 1536 tokens per request: 249.92x
+INFO 09-28 02:30:18 [model_runner.py:1450] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 09-28 02:30:21 [model_runner.py:1592] Graph capturing finished in 3 secs, took 0.06 GiB
+INFO 09-28 02:30:21 [llm_engine.py:437] init engine (profile, create kv cache, warmup model) took 9.14 seconds
+2026-09-28 02:30:22 - INFO - __main__ - *** Train ***
+=== [2026-09-28 02:30:27] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 89, 86, 24707, 46068, 40, 192.38
+───────────────────────────────────────────────
+=== [2026-09-28 02:30:42] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 87, 84, 37665, 46068, 46, 197.73
+───────────────────────────────────────────────
+=== [2026-09-28 02:30:57] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 90, 87, 41205, 46068, 49, 195.40
+───────────────────────────────────────────────
+=== [2026-09-28 02:31:12] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 88, 85, 41205, 46068, 52, 197.79
+───────────────────────────────────────────────
+=== [2026-09-28 02:31:27] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 97, 100, 41205, 46068, 57, 249.00
+───────────────────────────────────────────────
+=== [2026-09-28 02:31:42] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 90, 87, 41205, 46068, 56, 201.26
+───────────────────────────────────────────────
+=== [2026-09-28 02:31:57] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 86, 84, 41425, 46068, 58, 191.63
+───────────────────────────────────────────────
+=== [2026-09-28 02:32:12] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 88, 85, 41565, 46068, 59, 205.74
+───────────────────────────────────────────────
+=== [2026-09-28 02:32:27] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 98, 81, 41585, 46068, 63, 285.03
+───────────────────────────────────────────────
+=== [2026-09-28 02:32:42] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 88, 85, 41585, 46068, 60, 205.99
+───────────────────────────────────────────────
+=== [2026-09-28 02:32:57] GPU Status ===
+name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
+NVIDIA A40, 0, 0, 41585, 46068, 50, 78.59
+───────────────────────────────────────────────
+{'loss': 0.0365, 'grad_norm': 1.765625, 'learning_rate': 0.0, 'num_tokens': 5872.0, 'completions/mean_length': 525.0, 'completions/min_length': 317.0, 'completions/max_length': 828.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 525.0, 'completions/min_terminated_length': 317.0, 'completions/max_terminated_length': 828.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.03125, 'rewards/tag_count_reward/std': 0.0883883461356163, 'reward': 0.03125, 'reward_std': 0.0625, 'frac_reward_zero_std': 0.5, 'kl': 0.0, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.0483, 'grad_norm': 2.359375, 'learning_rate': 1e-05, 'num_tokens': 9336.0, 'completions/mean_length': 293.5, 'completions/min_length': 176.0, 'completions/max_length': 528.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 293.5, 'completions/min_terminated_length': 176.0, 'completions/max_terminated_length': 528.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.1875, 'rewards/tag_count_reward/std': 0.3471825420856476, 'reward': 0.1875, 'reward_std': 0.21650634706020355, 'frac_reward_zero_std': 0.5, 'kl': 0.0, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': 0.0623, 'grad_norm': 1.296875, 'learning_rate': 2e-05, 'num_tokens': 15835.0, 'completions/mean_length': 654.375, 'completions/min_length': 129.0, 'completions/max_length': 1024.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 601.5714721679688, 'completions/min_terminated_length': 129.0, 'completions/max_terminated_length': 855.0, 'rewards/accuracy_reward/mean': 0.125, 'rewards/accuracy_reward/std': 0.3535533845424652, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.1875, 'rewards/tag_count_reward/std': 0.3720119297504425, 'reward': 0.3125, 'reward_std': 0.375, 'frac_reward_zero_std': 0.5, 'kl': 0.0014488856249954551, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.0239, 'grad_norm': 1.78125, 'learning_rate': 1.9709418174260523e-05, 'num_tokens': 20022.0, 'completions/mean_length': 412.375, 'completions/min_length': 64.0, 'completions/max_length': 880.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 412.375, 'completions/min_terminated_length': 64.0, 'completions/max_terminated_length': 880.0, 'rewards/accuracy_reward/mean': 0.125, 'rewards/accuracy_reward/std': 0.3535533845424652, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.5625, 'rewards/tag_count_reward/std': 0.22160132229328156, 'reward': 0.6875, 'reward_std': 0.1613743007183075, 'frac_reward_zero_std': 0.5, 'kl': 0.02656508795917034, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': 0.2516, 'grad_norm': 3.296875, 'learning_rate': 1.8854560256532098e-05, 'num_tokens': 25283.0, 'completions/mean_length': 435.625, 'completions/min_length': 204.0, 'completions/max_length': 634.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 435.625, 'completions/min_terminated_length': 204.0, 'completions/max_terminated_length': 634.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.28125, 'rewards/tag_count_reward/std': 0.2086307406425476, 'reward': 0.28125, 'reward_std': 0.2217404693365097, 'frac_reward_zero_std': 0.0, 'kl': 0.0313342260196805, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.3523, 'grad_norm': 2.625, 'learning_rate': 1.7485107481711014e-05, 'num_tokens': 30675.0, 'completions/mean_length': 560.0, 'completions/min_length': 100.0, 'completions/max_length': 898.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 560.0, 'completions/min_terminated_length': 100.0, 'completions/max_terminated_length': 898.0, 'rewards/accuracy_reward/mean': 0.125, 'rewards/accuracy_reward/std': 0.3535533845424652, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.125, 'rewards/tag_count_reward/std': 0.18898223340511322, 'reward': 0.25, 'reward_std': 0.3115255832672119, 'frac_reward_zero_std': 0.0, 'kl': 0.03137172758579254, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.0749, 'grad_norm': 2.21875, 'learning_rate': 1.568064746731156e-05, 'num_tokens': 36328.0, 'completions/mean_length': 558.625, 'completions/min_length': 80.0, 'completions/max_length': 787.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 558.625, 'completions/min_terminated_length': 80.0, 'completions/max_terminated_length': 787.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.40625, 'rewards/tag_count_reward/std': 0.29693374037742615, 'reward': 0.40625, 'reward_std': 0.27900636196136475, 'frac_reward_zero_std': 0.0, 'kl': 0.03660131245851517, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': 0.1152, 'grad_norm': 2.921875, 'learning_rate': 1.3546048870425356e-05, 'num_tokens': 40829.0, 'completions/mean_length': 348.125, 'completions/min_length': 91.0, 'completions/max_length': 711.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 348.125, 'completions/min_terminated_length': 91.0, 'completions/max_terminated_length': 711.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.4375, 'rewards/tag_count_reward/std': 0.22160132229328156, 'reward': 0.4375, 'reward_std': 0.18217839300632477, 'frac_reward_zero_std': 0.0, 'kl': 0.05508677661418915, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.0875, 'grad_norm': 1.5546875, 'learning_rate': 1.1205366802553231e-05, 'num_tokens': 46562.0, 'completions/mean_length': 580.625, 'completions/min_length': 230.0, 'completions/max_length': 1024.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 517.2857666015625, 'completions/min_terminated_length': 230.0, 'completions/max_terminated_length': 1012.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.34375, 'rewards/tag_count_reward/std': 0.22903135418891907, 'reward': 0.34375, 'reward_std': 0.11967839300632477, 'frac_reward_zero_std': 0.5, 'kl': 0.03724642191082239, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.1654, 'grad_norm': 2.8125, 'learning_rate': 8.79463319744677e-06, 'num_tokens': 51475.0, 'completions/mean_length': 459.125, 'completions/min_length': 128.0, 'completions/max_length': 877.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 459.125, 'completions/min_terminated_length': 128.0, 'completions/max_terminated_length': 877.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.40625, 'rewards/tag_count_reward/std': 0.12938730418682098, 'reward': 0.40625, 'reward_std': 0.13466878235340118, 'frac_reward_zero_std': 0.0, 'kl': 0.045444831252098083, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': 0.1762, 'grad_norm': 1.78125, 'learning_rate': 6.453951129574644e-06, 'num_tokens': 59565.0, 'completions/mean_length': 861.75, 'completions/min_length': 196.0, 'completions/max_length': 1024.0, 'completions/clipped_ratio': 0.625, 'completions/mean_terminated_length': 591.3333740234375, 'completions/min_terminated_length': 196.0, 'completions/max_terminated_length': 801.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.125, 'rewards/format_reward/std': 0.3535533845424652, 'rewards/tag_count_reward/mean': 0.34375, 'rewards/tag_count_reward/std': 0.35197150707244873, 'reward': 0.46875, 'reward_std': 0.59292072057724, 'frac_reward_zero_std': 0.0, 'kl': 0.02243190538138151, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.1012, 'grad_norm': 2.4375, 'learning_rate': 4.319352532688444e-06, 'num_tokens': 65150.0, 'completions/mean_length': 523.125, 'completions/min_length': 174.0, 'completions/max_length': 661.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 523.125, 'completions/min_terminated_length': 174.0, 'completions/max_terminated_length': 661.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.375, 'rewards/tag_count_reward/std': 0.18898223340511322, 'reward': 0.375, 'reward_std': 0.18217839300632477, 'frac_reward_zero_std': 0.0, 'kl': 0.03784620203077793, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.1733, 'grad_norm': 1.9609375, 'learning_rate': 2.514892518288988e-06, 'num_tokens': 71682.0, 'completions/mean_length': 655.0, 'completions/min_length': 204.0, 'completions/max_length': 1024.0, 'completions/clipped_ratio': 0.125, 'completions/mean_terminated_length': 602.2857666015625, 'completions/min_terminated_length': 204.0, 'completions/max_terminated_length': 915.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.40625, 'rewards/tag_count_reward/std': 0.12938730418682098, 'reward': 0.40625, 'reward_std': 0.13466878235340118, 'frac_reward_zero_std': 0.0, 'kl': 0.031153700314462185, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': -0.1102, 'grad_norm': 2.671875, 'learning_rate': 1.1454397434679022e-06, 'num_tokens': 76429.0, 'completions/mean_length': 432.875, 'completions/min_length': 133.0, 'completions/max_length': 588.0, 'completions/clipped_ratio': 0.0, 'completions/mean_terminated_length': 432.875, 'completions/min_terminated_length': 133.0, 'completions/max_terminated_length': 588.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.40625, 'rewards/tag_count_reward/std': 0.12938730418682098, 'reward': 0.40625, 'reward_std': 0.13466878235340118, 'frac_reward_zero_std': 0.0, 'kl': 0.037221020087599754, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'loss': 0.0135, 'grad_norm': 2.203125, 'learning_rate': 2.905818257394799e-07, 'num_tokens': 84663.0, 'completions/mean_length': 798.75, 'completions/min_length': 102.0, 'completions/max_length': 1024.0, 'completions/clipped_ratio': 0.5, 'completions/mean_terminated_length': 573.5, 'completions/min_terminated_length': 102.0, 'completions/max_terminated_length': 916.0, 'rewards/accuracy_reward/mean': 0.0, 'rewards/accuracy_reward/std': 0.0, 'rewards/format_reward/mean': 0.0, 'rewards/format_reward/std': 0.0, 'rewards/tag_count_reward/mean': 0.46875, 'rewards/tag_count_reward/std': 0.2086307406425476, 'reward': 0.46875, 'reward_std': 0.2217404693365097, 'frac_reward_zero_std': 0.0, 'kl': 0.02236069366335869, 'clip_ratio/low_mean': 0.0, 'clip_ratio/low_min': 0.0, 'clip_ratio/high_mean': 0.0, 'clip_ratio/high_max': 0.0, 'clip_ratio/region_mean': 0.0, 'epoch': 0.0}
+{'train_runtime': 158.0777, 'train_samples_per_second': 0.759, 'train_steps_per_second': 0.095, 'train_loss': -0.032111294691761334, 'epoch': 0.0}
+***** train metrics *****
+  total_flos               =        0GF
+  train_loss               =    -0.0321
+  train_runtime            = 0:02:38.07
+  train_samples            =      93733
+  train_samples_per_second =      0.759
+  train_steps_per_second   =      0.095
+2026-09-28 02:33:00 - INFO - __main__ - *** Save model ***
+2026-09-28 02:33:05 - INFO - __main__ - Model saved to data/test-grpo-1.5b
+Job finished at: Mon Sep 28 02:33:10 AM EDT 2026
+📊 GPU monitor stopped.

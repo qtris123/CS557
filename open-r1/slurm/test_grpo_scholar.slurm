@@ -22,6 +22,12 @@ cd /home/vo43/CS557/open-r1
 export PYTHONPATH="src:$PYTHONPATH"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export TRITON_CACHE_DIR=/scratch/scholar/vo43/.triton
+export MASTER_ADDR=127.0.0.1
+export MASTER_PORT=29500
+export RANK=0
+export LOCAL_RANK=0
+export WORLD_SIZE=1
+export VLLM_USE_V1=0
 
 echo "============================================"
 echo "  Open-R1 GRPO Test Job"
@@ -70,6 +76,8 @@ accelerate launch \
     --num_processes 1 \
     src/open_r1/grpo.py \
     --config recipes/Qwen2.5-1.5B-Instruct/grpo/config_demo.yaml \
+    --vllm_mode colocate \
+    --vllm_gpu_memory_utilization 0.3 \
     --max_steps 15 \
     --num_generations 4 \
     --per_device_train_batch_size 4 \

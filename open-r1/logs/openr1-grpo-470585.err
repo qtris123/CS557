@@ -1,0 +1,166 @@
+/scratch/scholar/vo43/conda_envs/openr1/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/scratch/scholar/vo43/conda_envs/openr1/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Found cached dataset open_r1-math-220k (/scratch/scholar/vo43/huggingface/datasets/open-r1___open_r1-math-220k/default/0.0.0/e4e141ec9dea9f8326f4d347be56105859b2bd68)
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,289 >> loading file vocab.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/vocab.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file merges.txt from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/merges.txt
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file tokenizer.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/tokenizer.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file added_tokens.json from cache at None
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file special_tokens_map.json from cache at None
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file tokenizer_config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:14,290 >> loading file chat_template.jinja from cache at None
+[INFO|tokenization_utils_base.py:2299] 2026-09-28 02:29:14,595 >> Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[INFO|configuration_utils.py:698] 2026-09-28 02:29:14,648 >> loading configuration file config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/config.json
+[INFO|configuration_utils.py:770] 2026-09-28 02:29:14,649 >> Model config Qwen2Config {
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 1536,
+  "initializer_range": 0.02,
+  "intermediate_size": 8960,
+  "max_position_embeddings": 32768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "bfloat16",
+  "transformers_version": "4.52.3",
+  "use_cache": false,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+[INFO|modeling_utils.py:1150] 2026-09-28 02:29:14,980 >> loading weights file model.safetensors from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/model.safetensors
+[INFO|modeling_utils.py:2240] 2026-09-28 02:29:14,981 >> Instantiating Qwen2ForCausalLM model under default dtype torch.bfloat16.
+[WARNING|logging.py:328] 2026-09-28 02:29:14,983 >> You are attempting to use Flash Attention 2.0 with a model not initialized on GPU. Make sure to move the model to GPU after initializing it on CPU with `model.to('cuda')`.
+[INFO|configuration_utils.py:1135] 2026-09-28 02:29:14,984 >> Generate config GenerationConfig {
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "use_cache": false
+}
+
+[INFO|modeling_utils.py:5130] 2026-09-28 02:29:15,218 >> All model checkpoint weights were used when initializing Qwen2ForCausalLM.
+
+[INFO|modeling_utils.py:5138] 2026-09-28 02:29:15,219 >> All the weights of Qwen2ForCausalLM were initialized from the model checkpoint at Qwen/Qwen2.5-1.5B-Instruct.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use Qwen2ForCausalLM for predictions without further training.
+[INFO|configuration_utils.py:1090] 2026-09-28 02:29:15,274 >> loading configuration file generation_config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/generation_config.json
+[INFO|configuration_utils.py:1135] 2026-09-28 02:29:15,275 >> Generate config GenerationConfig {
+  "bos_token_id": 151643,
+  "do_sample": true,
+  "eos_token_id": [
+    151645,
+    151643
+  ],
+  "pad_token_id": 151643,
+  "repetition_penalty": 1.1,
+  "temperature": 0.7,
+  "top_k": 20,
+  "top_p": 0.8
+}
+
+Map:   0%|          | 0/93733 [00:00<?, ? examples/s]Caching processed dataset at /scratch/scholar/vo43/huggingface/datasets/open-r1___open_r1-math-220k/default/0.0.0/e4e141ec9dea9f8326f4d347be56105859b2bd68/cache-c740c6d118e6f051.arrow
+Map:   1%|          | 1000/93733 [00:00<00:43, 2156.47 examples/s]Map:   2%|▏         | 2000/93733 [00:00<00:28, 3210.02 examples/s]Map:   3%|▎         | 3000/93733 [00:00<00:24, 3718.01 examples/s]Map:   4%|▍         | 4000/93733 [00:01<00:21, 4142.39 examples/s]Map:   5%|▌         | 5000/93733 [00:01<00:20, 4295.82 examples/s]Map:   6%|▋         | 6000/93733 [00:01<00:19, 4392.76 examples/s]Map:   7%|▋         | 7000/93733 [00:01<00:19, 4470.25 examples/s]Map:   9%|▊         | 8000/93733 [00:01<00:19, 4456.08 examples/s]Map:  10%|▉         | 9000/93733 [00:02<00:18, 4519.03 examples/s]Map:  11%|█         | 10000/93733 [00:02<00:18, 4616.11 examples/s]Map:  12%|█▏        | 10994/93733 [00:02<00:19, 4165.80 examples/s]Map:  13%|█▎        | 11718/93733 [00:02<00:20, 3918.58 examples/s]Map:  14%|█▎        | 12805/93733 [00:03<00:19, 4195.67 examples/s]Map:  15%|█▍        | 13814/93733 [00:03<00:18, 4307.71 examples/s]Map:  16%|█▌        | 14808/93733 [00:03<00:18, 4330.24 examples/s]Map:  17%|█▋        | 15794/93733 [00:03<00:17, 4387.03 examples/s]Map:  18%|█▊        | 16802/93733 [00:04<00:17, 4428.45 examples/s]Map:  19%|█▉        | 17789/93733 [00:04<00:17, 4465.59 examples/s]Map:  20%|██        | 18795/93733 [00:04<00:16, 4543.47 examples/s]Map:  21%|██        | 19795/93733 [00:04<00:16, 4607.12 examples/s]Map:  22%|██▏       | 20625/93733 [00:05<00:23, 3167.37 examples/s]Map:  22%|██▏       | 21000/93733 [00:05<00:25, 2890.31 examples/s]Map:  23%|██▎       | 22000/93733 [00:05<00:21, 3290.61 examples/s]Map:  25%|██▍       | 23000/93733 [00:05<00:19, 3596.03 examples/s]Map:  26%|██▌       | 24000/93733 [00:06<00:18, 3771.79 examples/s]Map:  27%|██▋       | 25000/93733 [00:06<00:17, 3968.88 examples/s]Map:  28%|██▊       | 26000/93733 [00:06<00:16, 4054.62 examples/s]Map:  29%|██▉       | 27000/93733 [00:06<00:15, 4234.11 examples/s]Map:  30%|██▉       | 28000/93733 [00:06<00:15, 4308.21 examples/s]Map:  31%|███       | 29000/93733 [00:07<00:14, 4373.55 examples/s]Map:  32%|███▏      | 30000/93733 [00:07<00:15, 4197.44 examples/s]Map:  33%|███▎      | 31000/93733 [00:08<00:22, 2796.15 examples/s]Map:  34%|███▍      | 32000/93733 [00:08<00:19, 3155.67 examples/s]Map:  35%|███▌      | 33000/93733 [00:08<00:17, 3499.11 examples/s]Map:  36%|███▋      | 34000/93733 [00:08<00:15, 3770.43 examples/s]Map:  37%|███▋      | 35000/93733 [00:08<00:14, 3976.95 examples/s]Map:  38%|███▊      | 36000/93733 [00:09<00:14, 4069.50 examples/s]Map:  39%|███▉      | 37000/93733 [00:09<00:13, 4188.60 examples/s]Map:  41%|████      | 38000/93733 [00:09<00:13, 4275.92 examples/s]Map:  42%|████▏     | 39000/93733 [00:09<00:12, 4321.35 examples/s]Map:  42%|████▏     | 39830/93733 [00:10<00:14, 3837.17 examples/s]Map:  43%|████▎     | 40730/93733 [00:10<00:13, 3900.95 examples/s]Map:  45%|████▍     | 41736/93733 [00:10<00:12, 4012.95 examples/s]Map:  46%|████▌     | 42715/93733 [00:10<00:12, 4120.66 examples/s]Map:  47%|████▋     | 43719/93733 [00:11<00:11, 4214.91 examples/s]Map:  48%|████▊     | 44807/93733 [00:11<00:11, 4394.08 examples/s]Map:  49%|████▉     | 45803/93733 [00:11<00:10, 4453.95 examples/s]Map:  50%|████▉     | 46808/93733 [00:11<00:10, 4500.37 examples/s]Map:  51%|█████     | 47827/93733 [00:11<00:10, 4512.68 examples/s]Map:  52%|█████▏    | 48829/93733 [00:12<00:09, 4556.84 examples/s]Map:  53%|█████▎    | 49461/93733 [00:12<00:13, 3208.52 examples/s]Map:  53%|█████▎    | 50000/93733 [00:12<00:14, 3115.99 examples/s]Map:  54%|█████▍    | 51000/93733 [00:12<00:12, 3524.21 examples/s]Map:  55%|█████▌    | 52000/93733 [00:13<00:10, 3803.63 examples/s]Map:  57%|█████▋    | 53000/93733 [00:13<00:10, 3984.42 examples/s]Map:  58%|█████▊    | 54000/93733 [00:13<00:09, 4109.56 examples/s]Map:  59%|█████▊    | 55000/93733 [00:13<00:09, 4206.50 examples/s]Map:  60%|█████▉    | 56000/93733 [00:14<00:08, 4282.66 examples/s]Map:  61%|██████    | 57000/93733 [00:14<00:08, 4317.77 examples/s]Map:  62%|██████▏   | 58000/93733 [00:14<00:08, 4319.67 examples/s]Map:  63%|██████▎   | 59000/93733 [00:14<00:10, 3314.13 examples/s]Map:  64%|██████▍   | 60000/93733 [00:15<00:09, 3610.33 examples/s]Map:  65%|██████▌   | 61000/93733 [00:15<00:08, 3830.93 examples/s]Map:  66%|██████▌   | 62000/93733 [00:15<00:07, 4012.77 examples/s]Map:  67%|██████▋   | 63000/93733 [00:15<00:07, 4136.98 examples/s]Map:  68%|██████▊   | 64000/93733 [00:16<00:07, 4197.85 examples/s]Map:  69%|██████▉   | 65000/93733 [00:16<00:06, 4236.39 examples/s]Map:  70%|███████   | 66000/93733 [00:16<00:06, 4270.06 examples/s]Map:  71%|███████▏  | 67000/93733 [00:16<00:06, 4280.37 examples/s]Map:  73%|███████▎  | 68000/93733 [00:17<00:05, 4335.22 examples/s]Map:  73%|███████▎  | 68707/93733 [00:17<00:06, 3742.48 examples/s]Map:  74%|███████▍  | 69809/93733 [00:17<00:05, 4024.72 examples/s]Map:  76%|███████▌  | 70811/93733 [00:17<00:05, 4127.90 examples/s]Map:  77%|███████▋  | 71725/93733 [00:17<00:05, 4148.03 examples/s]Map:  78%|███████▊  | 72707/93733 [00:18<00:04, 4246.10 examples/s]Map:  79%|███████▊  | 73720/93733 [00:18<00:04, 4356.57 examples/s]Map:  80%|███████▉  | 74721/93733 [00:18<00:04, 4327.15 examples/s]Map:  81%|████████  | 75742/93733 [00:18<00:04, 4387.86 examples/s]Map:  82%|████████▏ | 76742/93733 [00:19<00:03, 4369.85 examples/s]Map:  83%|████████▎ | 77743/93733 [00:19<00:03, 4400.99 examples/s]Map:  84%|████████▎ | 78297/93733 [00:19<00:05, 2977.50 examples/s]Map:  84%|████████▍ | 79000/93733 [00:19<00:04, 3073.87 examples/s]Map:  85%|████████▌ | 80000/93733 [00:20<00:04, 3428.18 examples/s]Map:  86%|████████▋ | 81000/93733 [00:20<00:03, 3702.84 examples/s]Map:  87%|████████▋ | 82000/93733 [00:20<00:03, 3860.49 examples/s]Map:  89%|████████▊ | 83000/93733 [00:20<00:02, 4020.09 examples/s]Map:  90%|████████▉ | 84000/93733 [00:21<00:02, 4115.14 examples/s]Map:  91%|█████████ | 85000/93733 [00:21<00:02, 4216.75 examples/s]Map:  92%|█████████▏| 86000/93733 [00:21<00:01, 4273.55 examples/s]Map:  93%|█████████▎| 87000/93733 [00:21<00:01, 4351.75 examples/s]Map:  94%|█████████▍| 87912/93733 [00:22<00:01, 3934.46 examples/s]Map:  95%|█████████▍| 88741/93733 [00:22<00:01, 3911.76 examples/s]Map:  96%|█████████▌| 89739/93733 [00:22<00:00, 4118.60 examples/s]Map:  97%|█████████▋| 90825/93733 [00:22<00:00, 4306.79 examples/s]Map:  98%|█████████▊| 91820/93733 [00:22<00:00, 4402.56 examples/s]Map:  99%|█████████▉| 92810/93733 [00:23<00:00, 4486.61 examples/s]Map: 100%|██████████| 93733/93733 [00:25<00:00, 1125.31 examples/s]Map: 100%|██████████| 93733/93733 [00:26<00:00, 3599.37 examples/s]
+[INFO|trainer.py:706] 2026-09-28 02:29:46,608 >> max_steps is given, it will override any value given in num_train_epochs
+[INFO|trainer.py:756] 2026-09-28 02:29:46,608 >> Using auto half precision backend
+[INFO|configuration_utils.py:698] 2026-09-28 02:29:46,784 >> loading configuration file config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/config.json
+[INFO|configuration_utils.py:698] 2026-09-28 02:29:46,840 >> loading configuration file config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/config.json
+[INFO|configuration_utils.py:770] 2026-09-28 02:29:46,841 >> Model config Qwen2Config {
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 1536,
+  "initializer_range": 0.02,
+  "intermediate_size": 8960,
+  "max_position_embeddings": 32768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "bfloat16",
+  "transformers_version": "4.52.3",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+[INFO|image_processing_auto.py:315] 2026-09-28 02:29:46,943 >> Could not locate the image processor configuration file, will try to use the model config instead.
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file vocab.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/vocab.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file merges.txt from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/merges.txt
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file tokenizer.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/tokenizer.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file added_tokens.json from cache at None
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file special_tokens_map.json from cache at None
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file tokenizer_config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2023] 2026-09-28 02:29:58,020 >> loading file chat_template.jinja from cache at None
+[INFO|tokenization_utils_base.py:2299] 2026-09-28 02:29:58,281 >> Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[INFO|configuration_utils.py:1090] 2026-09-28 02:29:58,477 >> loading configuration file generation_config.json from cache at /scratch/scholar/vo43/huggingface/transformers/models--Qwen--Qwen2.5-1.5B-Instruct/snapshots/989aa7980e4cf806f80c7fef2b1adb7bc71aa306/generation_config.json
+[INFO|configuration_utils.py:1135] 2026-09-28 02:29:58,477 >> Generate config GenerationConfig {
+  "bos_token_id": 151643,
+  "do_sample": true,
+  "eos_token_id": [
+    151645,
+    151643
+  ],
+  "pad_token_id": 151643,
+  "repetition_penalty": 1.1,
+  "temperature": 0.7,
+  "top_k": 20,
+  "top_p": 0.8
+}
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:03<00:00,  3.15s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:03<00:00,  3.15s/it]
+
+Capturing CUDA graph shapes:   0%|          | 0/4 [00:00<?, ?it/s]Capturing CUDA graph shapes:  25%|██▌       | 1/4 [00:00<00:01,  1.52it/s]Capturing CUDA graph shapes:  50%|█████     | 2/4 [00:01<00:01,  1.59it/s]Capturing CUDA graph shapes:  75%|███████▌  | 3/4 [00:01<00:00,  1.63it/s]Capturing CUDA graph shapes: 100%|██████████| 4/4 [00:02<00:00,  1.30it/s]Capturing CUDA graph shapes: 100%|██████████| 4/4 [00:02<00:00,  1.39it/s]
+[rank0]:[W928 02:30:22.976270051 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+[INFO|trainer.py:2409] 2026-09-28 02:30:22,709 >> ***** Running training *****
+[INFO|trainer.py:2410] 2026-09-28 02:30:22,709 >>   Num examples = 93,733
+[INFO|trainer.py:2411] 2026-09-28 02:30:22,709 >>   Num Epochs = 1
+[INFO|trainer.py:2412] 2026-09-28 02:30:22,709 >>   Instantaneous batch size per device = 4
+[INFO|trainer.py:2415] 2026-09-28 02:30:22,709 >>   Total train batch size (w. parallel, distributed & accumulation) = 8
+[INFO|trainer.py:2416] 2026-09-28 02:30:22,709 >>   Gradient Accumulation steps = 2
+[INFO|trainer.py:2417] 2026-09-28 02:30:22,709 >>   Total optimization steps = 15
+[INFO|trainer.py:2418] 2026-09-28 02:30:22,710 >>   Number of trainable parameters = 1,543,714,304
+  0%|          | 0/15 [00:00<?, ?it/s]  7%|▋         | 1/15 [00:10<02:33, 10.99s/it]                                                7%|▋         | 1/15 [00:11<02:33, 10.99s/it] 13%|█▎        | 2/15 [00:17<01:46,  8.16s/it]                                               13%|█▎        | 2/15 [00:17<01:46,  8.16s/it] 20%|██        | 3/15 [00:28<01:55,  9.66s/it]                                               20%|██        | 3/15 [00:28<01:55,  9.66s/it] 27%|██▋       | 4/15 [00:38<01:45,  9.60s/it]                                               27%|██▋       | 4/15 [00:38<01:45,  9.60s/it] 33%|███▎      | 5/15 [00:45<01:27,  8.80s/it]                                               33%|███▎      | 5/15 [00:45<01:27,  8.80s/it] 40%|████      | 6/15 [00:55<01:22,  9.20s/it]                                               40%|████      | 6/15 [00:55<01:22,  9.20s/it] 47%|████▋     | 7/15 [01:04<01:13,  9.14s/it]                                               47%|████▋     | 7/15 [01:04<01:13,  9.14s/it] 53%|█████▎    | 8/15 [01:12<01:01,  8.81s/it]                                               53%|█████▎    | 8/15 [01:12<01:01,  8.81s/it] 60%|██████    | 9/15 [01:23<00:57,  9.61s/it]                                               60%|██████    | 9/15 [01:24<00:57,  9.61s/it] 67%|██████▋   | 10/15 [01:33<00:48,  9.61s/it]                                                67%|██████▋   | 10/15 [01:33<00:48,  9.61s/it] 73%|███████▎  | 11/15 [01:45<00:40, 10.25s/it]                                                73%|███████▎  | 11/15 [01:45<00:40, 10.25s/it] 80%|████████  | 12/15 [01:53<00:28,  9.66s/it]                                                80%|████████  | 12/15 [01:53<00:28,  9.66s/it] 87%|████████▋ | 13/15 [02:05<00:20, 10.21s/it]                                                87%|████████▋ | 13/15 [02:05<00:20, 10.21s/it] 93%|█████████▎| 14/15 [02:11<00:09,  9.22s/it]                                                93%|█████████▎| 14/15 [02:12<00:09,  9.22s/it]100%|██████████| 15/15 [02:23<00:00, 10.01s/it]                                               100%|██████████| 15/15 [02:23<00:00, 10.01s/it][INFO|trainer.py:3993] 2026-09-28 02:32:46,645 >> Saving model checkpoint to data/test-grpo-1.5b/checkpoint-15
+[INFO|configuration_utils.py:424] 2026-09-28 02:32:46,649 >> Configuration saved in data/test-grpo-1.5b/checkpoint-15/config.json
+[INFO|configuration_utils.py:904] 2026-09-28 02:32:46,650 >> Configuration saved in data/test-grpo-1.5b/checkpoint-15/generation_config.json
+[INFO|modeling_utils.py:3724] 2026-09-28 02:32:51,153 >> Model weights saved in data/test-grpo-1.5b/checkpoint-15/model.safetensors
+[INFO|tokenization_utils_base.py:2356] 2026-09-28 02:32:51,186 >> chat template saved in data/test-grpo-1.5b/checkpoint-15/chat_template.jinja
+[INFO|tokenization_utils_base.py:2525] 2026-09-28 02:32:51,187 >> tokenizer config file saved in data/test-grpo-1.5b/checkpoint-15/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2534] 2026-09-28 02:32:51,188 >> Special tokens file saved in data/test-grpo-1.5b/checkpoint-15/special_tokens_map.json
+[INFO|trainer.py:2676] 2026-09-28 02:33:00,788 >> 
+
+Training completed. Do not forget to share your model on huggingface.co/models =)
+
+
+                                               100%|██████████| 15/15 [02:38<00:00, 10.01s/it]100%|██████████| 15/15 [02:38<00:00, 10.54s/it]
+[INFO|trainer.py:3993] 2026-09-28 02:33:00,798 >> Saving model checkpoint to data/test-grpo-1.5b
+[INFO|configuration_utils.py:424] 2026-09-28 02:33:00,802 >> Configuration saved in data/test-grpo-1.5b/config.json
+[INFO|configuration_utils.py:904] 2026-09-28 02:33:00,803 >> Configuration saved in data/test-grpo-1.5b/generation_config.json
+[INFO|modeling_utils.py:3724] 2026-09-28 02:33:05,118 >> Model weights saved in data/test-grpo-1.5b/model.safetensors
+[INFO|tokenization_utils_base.py:2356] 2026-09-28 02:33:05,142 >> chat template saved in data/test-grpo-1.5b/chat_template.jinja
+[INFO|tokenization_utils_base.py:2525] 2026-09-28 02:33:05,159 >> tokenizer config file saved in data/test-grpo-1.5b/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2534] 2026-09-28 02:33:05,172 >> Special tokens file saved in data/test-grpo-1.5b/special_tokens_map.json
+[INFO|configuration_utils.py:424] 2026-09-28 02:33:05,375 >> Configuration saved in data/test-grpo-1.5b/config.json
+[rank0]:[W928 02:33:06.473730348 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())

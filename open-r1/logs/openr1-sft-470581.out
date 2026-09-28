@@ -1,11 +1,11 @@
 ============================================
   Open-R1 SFT Test Job
-  Job ID:    469081
+  Job ID:    470581
   Node:      scholar-j001
   GPU:       0
-  Time:      Tue Sep 22 05:34:28 PM EDT 2026
+  Time:      Mon Sep 28 02:04:00 AM EDT 2026
 ============================================
-Tue Sep 22 17:34:28 2026       
+Mon Sep 28 02:04:00 2026       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
 +-----------------------------------------+------------------------+----------------------+
@@ -14,7 +14,7 @@ Tue Sep 22 17:34:28 2026
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
 |   0  NVIDIA A40                     Off |   00000000:3B:00.0 Off |                    0 |
-|  0%   30C    P8             21W /  300W |       0MiB /  46068MiB |      0%      Default |
+|  0%   37C    P8             21W /  300W |       0MiB /  46068MiB |      0%      Default |
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
 
@@ -25,65 +25,76 @@ Tue Sep 22 17:34:28 2026
 |=========================================================================================|
 |  No running processes found                                                             |
 +-----------------------------------------------------------------------------------------+
-📊 GPU monitor started (PID=681681)
-=== [2026-09-22 17:34:29] GPU Status ===
+📊 GPU monitor started (PID=2706533)
+=== [2026-09-28 02:04:01] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 0, 0, 0, 46068, 30, 21.41
+NVIDIA A40, 0, 0, 0, 46068, 37, 21.64
 ───────────────────────────────────────────────
-=== [2026-09-22 17:34:44] GPU Status ===
+=== [2026-09-28 02:04:16] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 0, 0, 0, 46068, 30, 21.42
+NVIDIA A40, 0, 0, 0, 46068, 37, 21.79
 ───────────────────────────────────────────────
-[2026-09-22 17:34:54,539] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-=== [2026-09-22 17:34:59] GPU Status ===
+[2026-09-28 02:04:29,494] [INFO] [real_accelerator.py:239:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+=== [2026-09-28 02:04:31] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 0, 0, 6173, 46068, 33, 69.48
+NVIDIA A40, 0, 0, 6173, 46068, 40, 72.77
 ───────────────────────────────────────────────
-Warning: The cache directory for DeepSpeed Triton autotune, /home/vo43/.triton/autotune, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
-=== [2026-09-22 17:35:14] GPU Status ===
+Warning: The cache directory for DeepSpeed Triton autotune, /scratch/scholar/vo43/.triton, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+=== [2026-09-28 02:04:46] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 94, 24329, 46068, 44, 153.46
+NVIDIA A40, 0, 0, 24329, 46068, 50, 228.98
 ───────────────────────────────────────────────
-=== [2026-09-22 17:35:29] GPU Status ===
+=== [2026-09-28 02:05:01] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 0, 0, 36211, 46068, 48, 217.52
+NVIDIA A40, 100, 85, 36231, 46068, 64, 262.02
 ───────────────────────────────────────────────
-=== [2026-09-22 17:35:44] GPU Status ===
+=== [2026-09-28 02:05:16] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 72, 36237, 46068, 59, 206.53
+NVIDIA A40, 100, 87, 36417, 46068, 71, 284.27
 ───────────────────────────────────────────────
-=== [2026-09-22 17:35:59] GPU Status ===
+=== [2026-09-28 02:05:31] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 81, 36417, 46068, 65, 204.42
+NVIDIA A40, 98, 95, 36417, 46068, 77, 268.71
 ───────────────────────────────────────────────
-=== [2026-09-22 17:36:14] GPU Status ===
+=== [2026-09-28 02:05:46] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 81, 36417, 46068, 71, 263.88
+NVIDIA A40, 100, 85, 36417, 46068, 81, 263.61
 ───────────────────────────────────────────────
-=== [2026-09-22 17:36:29] GPU Status ===
+=== [2026-09-28 02:06:01] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 99, 100, 36417, 46068, 75, 274.67
+NVIDIA A40, 100, 88, 36417, 46068, 83, 280.14
 ───────────────────────────────────────────────
-=== [2026-09-22 17:36:44] GPU Status ===
+=== [2026-09-28 02:06:16] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 89, 36417, 46068, 76, 280.28
+NVIDIA A40, 100, 88, 36419, 46068, 84, 291.09
 ───────────────────────────────────────────────
-=== [2026-09-22 17:36:59] GPU Status ===
+=== [2026-09-28 02:06:31] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 84, 36419, 46068, 78, 287.16
+NVIDIA A40, 100, 87, 36419, 46068, 84, 279.64
 ───────────────────────────────────────────────
-=== [2026-09-22 17:37:14] GPU Status ===
+=== [2026-09-28 02:06:47] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 84, 36419, 46068, 79, 293.67
+NVIDIA A40, 100, 88, 36419, 46068, 84, 272.55
 ───────────────────────────────────────────────
-=== [2026-09-22 17:37:29] GPU Status ===
+=== [2026-09-28 02:07:02] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 100, 85, 36419, 46068, 78, 248.45
+NVIDIA A40, 22, 1, 36419, 46068, 74, 174.38
 ───────────────────────────────────────────────
-=== [2026-09-22 17:37:44] GPU Status ===
+=== [2026-09-28 02:07:17] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 0, 0, 36419, 46068, 64, 85.89
+NVIDIA A40, 8, 0, 36419, 46068, 63, 85.97
 ───────────────────────────────────────────────
-=== [2026-09-22 17:37:59] GPU Status ===
+=== [2026-09-28 02:07:32] GPU Status ===
 name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], memory.total [MiB], temperature.gpu, power.draw [W]
-NVIDIA A40, 9, 0, 36419, 46068, 58, 81.75
+NVIDIA A40, 0, 0, 36419, 46068, 58, 81.82
+───────────────────────────────────────────────
+{'train_runtime': 172.4509, 'train_samples_per_second': 1.392, 'train_steps_per_second': 0.174, 'train_loss': 1.4648427327473958, 'num_tokens': 345900.0, 'mean_token_accuracy': 0.6229961156845093, 'epoch': 0.0}
+***** train metrics *****
+  total_flos               =  3090540GF
+  train_loss               =     1.4648
+  train_runtime            = 0:02:52.45
+  train_samples            =     172514
+  train_samples_per_second =      1.392
+  train_steps_per_second   =      0.174
+Job finished at: Mon Sep 28 02:07:42 AM EDT 2026
+📊 GPU monitor stopped.
