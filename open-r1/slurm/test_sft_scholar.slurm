@@ -17,10 +17,10 @@ source ~/.bashrc
 
 eval "$(conda shell.bash hook)"
 conda activate openr1
-
 cd /home/vo43/CS557/open-r1
 export PYTHONPATH="src:$PYTHONPATH"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export TRITON_CACHE_DIR=/scratch/scholar/vo43/.triton
 
 echo "============================================"
 echo "  Open-R1 SFT Test Job"
@@ -70,6 +70,8 @@ start_gpu_monitor
 
 # Fast test run: 30 steps with Qwen2.5-1.5B on Mixture-of-Thoughts (science)
 accelerate launch \
+    --num_machines 1 \
+    --dynamo_backend no \
     --mixed_precision bf16 \
     --num_processes 1 \
     src/open_r1/sft.py \
