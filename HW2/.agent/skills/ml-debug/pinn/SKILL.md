@@ -1,0 +1,561 @@
+---
+name: ml-debug-pinn
+description: "PINN (Physics-Informed Neural Network) training and debugging, and any loss placed on a model's own derivative: a PDE or ODE residual, Sobolev training, matching a teacher's gradient or Jacobian. Use when building or debugging such a model, when one loss term does not fall, when the loss falls and the solution is wrong, or before the first run of a derivative loss. Find your situation in the table, do its steps, and show each one in your reply. Sub-skill of the ml-debug skill."
+---
+
+
+# PINN Training Best Practices
+
+Consolidated from: NeuralPDE.jl tests/docs, ConFIG repo, Wang et al. 2021, Rathore et al. 2024 (ICML), ml_debug folklore, and practical experience. Heat-exchanger-specific notes in [references/heat_exchanger.md](references/heat_exchanger.md).
+
+Epistemic status: Patterns confirmed across multiple sources. Where sources disagree, noted. Paper claims marked with credence estimates.
+
+---
+
+## What to do now
+
+A loss on a derivative fails silently more often than a loss on a value: the derivative can be wrong,
+unreachable for the architecture, or untrained, while the total loss still falls. So do the steps of
+your row and show them in the block under [Your reply](#your-reply). These are added to the steps of
+the main `ml-debug` skill (LOOK, PREDICT, NULL, CAUSES), not a replacement for them.
+
+| when | steps |
+|---|---|
+| about to build the model, or to queue its first run | Section 0 (baselines), Section 1 (scales), DERIVATIVE |
+| a run finished | TERMS |
+| one loss term does not fall, or the loss falls and the solution is wrong | DERIVATIVE, TERMS, then Section 4 |
+| the derivative is fitted to labels (a teacher's gradient or Jacobian), not to an equation | DERIVATIVE, TERMS, [Section 11](#11-derivative-labels-sobolev-training) |
+| about to write that the method works, or that it fails | TERMS item 1 and item 6, then NULL and CAUSES of `ml-debug` |
+
+### DERIVATIVE
+
+Do this on a small copy of the model in float64, before the first real run. It takes minutes.
+
+1. Correct. Compare the derivative that the loss uses with a finite difference at a few random
+   points (`torch.autograd.gradcheck`, or by hand). Where the derivative is written in closed form,
+   compare it with autograd as well. Report the largest relative difference.
+2. Trainable. A loss on a derivative needs the derivative of the derivative. Build the graph with
+   `create_graph=True`. List every operation between the input and the output and check that each
+   has a second derivative: ReLU's is zero, and some fused kernels (fused attention, cuDNN
+   recurrent layers) raise an error or return nothing. Then take one optimizer step on a fixed
+   batch with only the derivative loss, and report that loss before and after, and the gradient
+   norm for each parameter group. A group with zero gradient is not trained by this term.
+3. Reachable. Write the model's derivative in closed form and say what it cannot be. A model with
+   one hidden layer, `f(x) = U act(V'x + b)`, has the derivative `U diag(act'(V'x + b)) V'`: each
+   hidden unit can change its contribution only along the input direction that it also reads. The
+   gradient of a scalar output is always a curl-free field. If the target derivative is outside
+   what the form allows, more training does not help; change the form (more depth, a separate
+   head) and say so.
+4. Units. Write the unit of the value term and of the derivative term. A derivative of a mean
+   and a derivative of a sum differ by the count; a derivative with respect to a standardised
+   input differs by the input's scale. Put both terms in the dimensionless form of Section 1
+   before weighting them.
+5. Same in training and in use. State the variable that the derivative is taken with respect to,
+   and which other inputs are present or held, in the training loss and where the model is used.
+   A derivative trained with inputs that are absent at use time is another function.
+
+### TERMS
+
+Do this after each run. Put the numbers in the run report, not in a side script.
+
+1. Each loss term alone, then all terms, on the same data, targets and steps. One table. It
+   separates two causes that look the same in a combined run: the form cannot fit this term, or
+   the terms compete for the same weights.
+2. For each term, the gradient norm on the weights that the terms share, and the cosine between
+   the terms' gradients, at several steps (`scripts/parts.py`, `grad_share`). A term with under 1%
+   of the gradient has not been tried yet.
+3. Every loss weight that changes during training, logged as a curve. A rule that balances terms
+   by a slow average of their gradient norms gives a wrong weight for as long as the average lags.
+4. Every free scale that multiplies a term's prediction (a learned amplitude, a profile, a gate),
+   logged from start to end. Such a scale can go to zero, and the term then "predicts nothing":
+   its relative error sits at 1.0 and the other terms look healthy.
+5. Held-out error for each term beside its training error. They overfit at different times.
+6. The use. Compare the solution with a classical solver, or run the task that the model is for.
+   A lower residual or derivative error is a proxy; see NULL in `ml-debug` for when two such errors
+   can be compared at all.
+
+### Your reply
+
+```
+ml-debug-pinn: <the row you are in>
+DERIVATIVE  correct: autograd against finite difference, largest relative difference <value> on <n> points | not run: <reason>
+            trainable: operations without a second derivative: <list> | none; derivative loss over one step <before> -> <after>; parameter groups with zero gradient: <list> | none
+            reachable: model derivative = <closed form>; it cannot be <what> | no limit found
+            units: value term <unit>, derivative term <unit>; made comparable by <what>
+            training and use: derivative with respect to <variable>, with <inputs> present; in use: the same | differs: <how>
+TERMS       alone: <term> <error>, <term> <error>; together: <error for each term>; same data, targets, steps
+            gradient norm for each term at steps <a, b, c>: <values>; cosine: <values>
+            weights and free scales: <name> <start> -> <end>
+            held-out against training, for each term: <values>
+            the use: <solver comparison or task result> | not run: <reason>
+```
+
+For a step in your row that you did not do, write `SKIPPED: <reason>`.
+<!-- CLAUDE (PI, Fable), 2026-11-19, at wassname's request after two days of fitting a model's
+derivative to a teacher's. The table and the block follow the main skill: wassname's observation
+is that agents do such checks only when a form asks for them and the result is shown. Each item
+is a failure that cost hours there or is a standard PINN failure in the sections below. -->
+
+---
+
+## 0. Before You PINN: Complexity Ladder and Baselines
+
+PINNs are complex. Before trusting a PINN, work up the complexity ladder and compare against simpler baselines at each level. Each level should beat the previous one or you're adding complexity for nothing.
+
+**Make complexity pay rent.** If a fancier model doesn't improve on the simpler one, the added physics/architecture is either wrong, badly scaled, or unnecessary.
+
+Build a complexity ladder for your problem (see [references/heat_exchanger.md](references/heat_exchanger.md) for a heat exchanger example). At each level, brainstorm:
+- What assumption am I adding/relaxing?
+- What does this buy me (lower RMSE, new physics captured)?
+- What breaks if I simplify further?
+- **Which inputs does the model need to be conditional on?** If you want what-if scenarios ("what happens if I double the flow rate?"), the model must take that variable as an explicit input -- not bake it in as a constant. A model trained at fixed m_dot cannot generalize to m_dot * 2, even in-distribution. Decide the conditioning variables before building the model.
+
+**Try the simplest baselines first.** If scipy.optimize.minimize + solve_bvp fits your data to 2 K RMSE, you probably don't need a PINN.
+
+**Steady-state before dynamic.** If the problem has a transient component, solve the steady-state first. It's strictly simpler (no IC, no temporal causality), gives a reference solution, and the PINN for transient can be initialized from the steady-state solution. Many process systems spend >90% of operating time near steady-state anyway.
+
+Report RMSE, MAE, and trajectory plots for each baseline alongside the PINN. Physics-informed models should win on extrapolation and long-horizon rollout even if in-sample fit is similar.
+
+**Train/test split**: Use temporal split (not random). First 75% train, last 25% test. Random splitting leaks temporal correlation.
+
+---
+
+## 1. Nondimensionalization
+
+Nondimensionalize the governing equations *before* feeding them to the network. Raw SI units (T in Kelvin, h in J/kg, z in meters) create loss terms with wildly different magnitudes -- this is exactly the multi-scale problem that adaptive weighting tries to fix downstream. Nondimensionalizing fixes it at the source.
+
+**Recipe:**
+1. Pick characteristic scales: T_ref, L_ref, h_ref = Cp_ref * T_ref, etc.
+2. Define dimensionless variables: z* = z/L, T* = (T - T_cold)/(T_hot - T_cold), etc.
+3. Substitute into the PDE, cancel dimensions.
+4. The resulting coefficients are O(1) dimensionless groups (NTU, Biot, etc.).
+
+This also makes the input domain ~[0,1] naturally, which is what NeuralPDE.jl examples assume but never say why.
+
+If you can't nondimensionalize cleanly (unknown material properties, mixed units), at minimum z-score each input/output channel so the network sees zero-mean unit-variance data.
+
+> Rathore et al. 2024: "the estimate of the κ grows polynomially with nres" -- but this is in raw units. Nondimensionalization reduces the effective condition number by making all PDE coefficients O(1).
+> Source: https://arxiv.org/pdf/2402.01868, Section 8.2 (Theorem 8.4), empirical check in Appendix F.5
+
+---
+
+## 2. Architecture
+
+From NeuralPDE.jl tests/docs + Wang et al. 2021:
+
+- **Depth**: 2-3 layers most common in NeuralPDE.jl examples; 4-5 sometimes. Wang et al. 2021 Table 2 found the opposite for their improved models (M2-M4): accuracy improved monotonically up to 7 layers / 100 units. Only the vanilla PINN (M1) was depth-sensitive.
+- **Width**: 16-64 (start at 32). Occasionally 128 for harder problems.
+- **Activations**: tanh dominates. SiLU/GeLU sometimes. sigmoid for some ODEs. Final layer linear.
+- **Multi-output**: One chain per dependent variable: `[Chain(Dense(in, n, act), Dense(n, n, act), Dense(n, 1)) for _ in 1:k]` or a single shared trunk with separate heads.
+- **No**: Fourier features (unless spectral bias is a problem), batch norm, dropout, skip connections, attention. These are for data-rich regimes; PINNs are data-poor + physics-rich.
+- **Precision**: float64 for numerical stability. Convert model: `model.double()` or `|> f64` in Julia.
+- **Init**: Xavier/Glorot normal, zero biases (Rathore et al. 2024 setup).
+
+**Modified MLP** (Wang et al. 2021, credence ~70%):
+> Wang et al. propose a modified MLP with multiplicative interactions. With `U = φ(XW1 + b1)`, `V = φ(XW2 + b2)` two nonlinear encodings of the input (φ = tanh) and a per-layer gate `Z(k) = φ(H(k)Wz,k + bz,k)` computed from the hidden state, the update is `H(k+1) = (1 - Z(k)) * U + Z(k) * V`. Authors claim a ~3x decrease in the leading Hessian eigenvalue.
+> Source: https://arxiv.org/pdf/2001.04536, Section 2.6, equations 43-47
+> Evidence: on Helmholtz the architecture alone (M3) improves relative L2 error 3.4-8.7x over vanilla PINN (M1) across 9 width/depth settings (Table 2); with LR annealing (M4) it is 23-97x. On Klein-Gordon M3 is 9.1x, M4 is 64x (Table 3). The paper's headline "50-100x" is the combination, not the architecture. Only tested by the proposing authors; no independent replication found.
+
+**Random Weight Factorization (RWF)** (arXiv 2210.01274, credence ~60%):
+> Factorize each neuron's weight vector as w = s * w_unit, where s is a trainable scalar and w_unit is the unit-normalized direction. This changes the optimization geometry so the loss surface has better-conditioned local minima. "Predictions obtained by RWF are in excellent agreement with ground truth, while other weight parameterizations result in poor or non-physical approximations."
+> Source: https://arxiv.org/pdf/2210.01274
+> Used in the PirateNet architecture alongside causal training, sequence-to-sequence, and Fourier features. Simple to implement as a custom parameterization on Linear layers.
+> Credence: plausible mechanism, but proposing-author result; check jaxpi repo for independent adoption.
+
+**PirateNet** (jaxpi library, credence ~55%): Bundles RWF + causal time-marching + seq2seq + Fourier features into one architecture. Reference implementation if you want all the tricks together.
+> Source: https://github.com/PredictiveIntelligenceLab/jaxpi
+
+**Symmetry-enforcing architectures** (Julia Ling et al., credence ~75%):
+> Instead of data-augmenting with transformed copies, bake symmetries directly into the architecture so every model in the function space is automatically invariant/equivariant. For turbulence closure (Reynolds stress from velocity gradients), custom tensor layers enforce Galilean invariance by construction. "The Galilean invariant model is more accurate than the other models" and generalizes better across flow configurations.
+> Source: Ling et al. 2016, "Machine learning strategies for systems with invariance properties." J. Comput. Phys. https://doi.org/10.1016/j.jcp.2016.05.003
+> Lecture: Brunton, S. "AI/ML+Physics Part 3 - Designing an Architecture." https://www.youtube.com/watch?v=fiX8c-4K0-Q
+> Key distinction: invariance (output unchanged by transformation, e.g., energy is frame-invariant) vs equivariance (output transforms same way as input, e.g., stress tensor rotates with frame). Equivariant architectures are more general. If your PDE has known symmetries (translation, rotation, scaling), enforce them architecturally rather than hoping the optimizer discovers them.
+> **Caveat**: This works best for local closure terms (Reynolds stress, turbulence models) and unbounded/periodic domains where the global symmetry holds everywhere. If your domain has boundary conditions that break the symmetry (e.g., a wall breaks rotational invariance), enforcing the symmetry globally in the architecture will prevent the solution from satisfying the BCs -- the architecture will be fighting the problem. In bounded domains, use symmetry-enforcing architectures only for terms where the symmetry genuinely holds (e.g., the constitutive relation), not for the full solution field. Libraries like `e3nn` implement this but add significant computational overhead.
+
+---
+
+## 3. Optimization
+
+The loss landscape of PINNs is ill-conditioned. First-order methods (Adam) converge slowly near the solution. Second-order methods (L-BFGS) can get stuck on strong Wolfe line search. The solution: combine them.
+
+### Recommended workflow
+
+```
+1. Adam (Rathore grid: {1e-5 ... 1e-1}) for 1k-31k iterations, then switch
+   - Escapes saddle points, explores broadly
+   - Tolerates noisy gradients
+2. L-BFGS (lr=1.0, memory=100) until convergence stalls
+   - Preconditions the Hessian, reduces the condition number by at least 1000x (Figure 3)
+   - Often stalls: cannot find step size satisfying strong Wolfe conditions
+3. (Optional) NysNewton-CG (NNCG) for final polish
+   - 1.9-4.3x further improvement in L2RE, 16-18x in loss (Table 2)
+   - But 5x / 20x / 322x slower per iteration than L-BFGS on convection / reaction / wave (Table 3)
+```
+
+> Rathore et al. 2024 (ICML, credence ~80%): "Adam+L-BFGS attains 14.2x smaller L2RE than Adam on convection and 6.07x smaller than L-BFGS on wave." Tested on 3 PDEs (convection, reaction, wave), 5 seeds, widths 50-400.
+> Source: https://arxiv.org/pdf/2402.01868, Table 1
+> Code: https://github.com/pratikrathore8/opt_for_pinns
+
+**Alternative from NeuralPDE.jl**: Stepwise LR decrease with warm-start:
+```
+Adam(0.1) -> Adam(0.01) -> Adam(0.001)
+# Remake problem with u0 = res.u at each stage
+```
+
+### Key findings on loss landscape
+
+**Near-zero loss required** (Rathore et al., credence ~85%):
+> "on the convection PDE, a loss of 10^-3 yields an L2RE around 10^-1, but decreasing the loss by a factor of 100 to 10^-5 yields an L2RE around 10^-2, a 10x improvement."
+> Source: https://arxiv.org/pdf/2402.01868, Section 4, Figure 2
+> Implication: you need to drive the loss very low for useful accuracy. Don't stop at "loss looks flat."
+
+**L-BFGS stalls but gradient is still useful** (Rathore et al., credence ~80%):
+> "L-BFGS stops in these cases without reaching a critical point: the gradient norm is around 10^-2 or 10^-3. The gradient still contains useful information for improving the loss."
+> Source: https://arxiv.org/pdf/2402.01868, Section 7.1, Figure 4 (line-search failure in Appendix E, Figure 9)
+> Cause: strong Wolfe line search fails, step size goes to zero.
+> Fix: switch to NNCG (Armijo only) or restart with different LR.
+
+**Condition number grows with nres** (Rathore et al., credence ~70%):
+> Theorem 8.4 (Section 8.2): condition number = Omega(nres^alpha) with alpha > 1/2, given eigenvalues of A o K_inf decaying as O(j^-2alpha). nres typically ranges 1e3 to 1e4.
+> Separately, measured condition numbers near a solution are often > 1e4 (Section 6.2, Figure 3).
+> Implication: more collocation points doesn't just mean more compute -- it makes the optimization harder.
+
+---
+
+## 4. Loss Design and Gradient Pathologies
+
+### The core problem
+
+The PINN loss has multiple terms (PDE residual, BCs, ICs, data) with different gradient magnitudes. The PDE residual term dominates because it involves differential operators that amplify gradients.
+
+**L1 vs L2 norm choice** (Brunton 2023):
+> L2 norm (MSE) on residuals: default; promotes smooth, low-frequency solutions. L1 norm (MAE) on residuals: more robust to outlier collocation errors and sharp gradients (shocks) since it doesn't square-penalize large pointwise residuals. This is distinct from L1 *regularization on equation coefficients*, which is what SINDy and sparse equation discovery use to promote parsimony (few active terms). Don't conflate the two: L1 residual = robust fitting; L1 coefficient regularization = sparse model selection. For standard PINNs with a known PDE, L2 is correct. L1 residual loss is worth trying if you have shocks or suspect outlier collocation points.
+> Source: Brunton, S. "AI/ML+Physics Part 4 - Crafting a Loss Function." https://www.youtube.com/watch?v=3SNkQ8jhKXc
+
+> Wang et al. 2021 (credence ~80%): "the gradients corresponding to the boundary loss term Lub(θ) in each layer are sharply concentrated around zero and overall attain significantly smaller values than the gradients corresponding to the PDE residual loss Lr(θ)." Shown via per-layer histograms of back-propagated gradients; the paper does not quantify the gap in orders of magnitude.
+> Source: https://arxiv.org/pdf/2001.04536, Section 2.2, Figures 2-3
+
+**Consequences:**
+- BC/IC losses are undertrained (gradient signal drowned out)
+- Solution satisfies the PDE approximately but violates BCs
+- This looks like "the PINN found a wrong solution" but it's really "the optimizer is ignoring the BCs"
+
+### Hessian stiffness
+
+> Wang et al. 2021: "many eigenvalues of the residual-loss Hessian are extremely large up to 1e5" while the boundary-loss Hessian eigenvalues stay small, so the gradient-flow stiffness is dominated by the residual term. This is an absolute magnitude, not a condition number; Wang never reports one.
+> Source: https://arxiv.org/pdf/2001.04536, Section 2.4, Figures 4-5
+> For a condition number, use Rathore Figure 3: outlier eigenvalues > 1e4 (convection), > 1e3 (reaction), > 1e5 (wave).
+
+### Solutions (in order of preference)
+
+**1. Nondimensionalize first** (see Section 1). This is the cheapest fix and addresses the root cause.
+
+**2. Learning rate annealing** (Wang et al. 2021, credence ~75%):
+> Adaptively weight each loss term inversely proportional to its gradient magnitude. EMA of gradient statistics for stability.
+> Source: https://arxiv.org/pdf/2001.04536, Algorithm 1
+> NeuralPDE.jl implements this as `GradientScaleAdaptiveLoss`.
+
+**3. Gradient aggregation methods** (ConFIG or UPGrad):
+> Instead of summing loss gradients (which can cancel), project them into a conflict-free direction.
+> ConFIG: unit-normalize per-loss gradients, solve least-squares for combined direction, rescale by projection lengths.
+> Source: https://tum-pbs.github.io/ConFIG/
+> Key: must compute per-loss gradients separately (zero_grad + backward for each). Summing raw losses defeats the purpose.
+> M-ConFIG: momentum variant, updates only one loss's gradient per step. Use with SGD, not Adam (momentum conflict).
+
+ConFIG and UPGrad are both reasonable candidates when the losses cannot be replaced by hard constraints. Keep plain summation as a baseline. The current evidence does not establish one aggregation method as generally best.
+
+**4. Don't use multiple losses if you can avoid it.** A single well-posed loss is always better than a weighted sum. Can you reformulate BCs as hard constraints (e.g., multiply network output by a function that satisfies BCs)? Can you use a penalty method that naturally balances?
+
+**4b. Constrained optimization instead of penalized** (Brunton 2023, credence ~80%):
+> Standard PINNs use penalized (soft) constraints: add physics as a loss term. The alternative is constrained optimization: minimize data error while exactly satisfying the physics constraints. "With a loss function you're not exactly satisfying your constraints. With constrained optimization you are."
+> Source: Brunton, S. "AI/ML+Physics Part 5 - Employing an Optimization Algorithm." https://www.youtube.com/watch?v=T4iJ10TAIMg
+> Physics-informed DMD (Baddoo et al. 2021) is the cleanest example: restrict the DMD matrix to a symmetry-preserving manifold (Hermitian, symplectic, etc.) via the Procrustes problem. KKT closed-form solutions exist because DMD is linear in its parameters -- the constraint is linear in both the output and the parameters simultaneously.
+> Baddoo et al. 2021. "Physics-informed dynamic mode decomposition." Proc. R. Soc. A. https://arxiv.org/pdf/2112.04307
+> **Critical caveat for PINNs**: A BC like u(0)=0 is affine in the output u, but it is nonlinear in the NN weights theta. Closed-form KKT does NOT apply to neural network parameters. For NN-based PINNs, the two options for hard constraints are: (a) architectural -- multiply output by a distance function that satisfies the BC (Section 4 item 8), or (b) Augmented Lagrangian Methods (ALM), which are iterative and substantially more complex than Adam. Constrained optimization is most practical for linear models (DMD, SINDy, linear state-space) where the parameters enter linearly.
+
+**5. Curriculum regularization** (Krishnapriyan et al. 2021 NeurIPS, credence ~80%):
+> When the PINN fails on hard PDE regimes (high convection coefficient, strong reaction), don't start there. Start with easy parameters (small coefficient), train to convergence, then warm-start and increase to the target regime. 1-2 orders of magnitude improvement over naive training.
+> "The curriculum training approach achieves significantly better errors, as well as lower variance in the error." (From Figure E.2 showing 10 seeds)
+> Source: https://arxiv.org/pdf/2109.01050, Sections 5.1 and Figure 4
+> Evidence: evidence/krishnapriyan2021_failure_modes.md
+
+**6. Sequence-to-sequence (time-marching)** (Krishnapriyan et al. 2021, credence ~75%):
+> For time-dependent PDEs: train on a short time window, predict next state, step forward. Don't train on full space-time at once. "Posing the problem as seq2seq learning results in significantly lower error. The difference is particularly striking for reaction and reaction-diffusion cases, where seq2seq decreases error by almost two orders of magnitude."
+> Source: https://arxiv.org/pdf/2109.01050, Section 5.2
+> NeuralPDE.jl calls this time-marching; see `WeightedIntervalTraining`.
+> Note: these failures are not due to limited NN expressivity -- the architecture has enough capacity. The problem is optimization difficulty from the soft PDE constraint.
+
+**7. Causal training** (Wang et al. 2022, credence ~85%):
+> Standard PINNs trained by gradient descent are implicitly biased toward minimizing residuals at *later* times before even fitting the initial conditions -- violating physical causality. The NTK analysis shows the residual at time t is influenced more by residuals at later t' > t than earlier ones. This makes PINNs fail on chaotic/turbulent systems.
+> Fix: weight each temporal residual point by wi = exp(-epsilon * sum_j<i R_j(theta)), where R_j is the accumulated residual before time i. This forces earlier times to converge first before the loss "turns on" at later times.
+> "10-100x improvements in accuracy compared to competing approaches. First time PINNs succeeded on chaotic Lorenz, Kuramoto-Sivashinsky, and 2D Navier-Stokes in turbulent regime."
+> Source: https://arxiv.org/pdf/2203.07404, Abstract and Section 3
+> Evidence: evidence/wang2022_causal_training.md
+> Key difference from seq2seq/curriculum: causal weighting works within a single continuous training, without requiring separate time windows or changing the PDE coefficients. Can be combined with seq2seq for further gains.
+> Sensitivity: epsilon controls the steepness of the causal weights. Too small = residuals at later times turn on too early. Too large = training stalls on early time steps. Anneal epsilon during training.
+
+**8. Hard BCs via distance functions** (Sukumar & Srivastava 2022 CMAME, credence ~80%):
+> Instead of penalizing BC violations (soft), multiply the PINN output by a distance function phi(x) that is zero on the boundary. Then u(x) = phi(x) * NN(x) satisfies BCs exactly by construction.
+> "We eliminate modeling error associated with the satisfaction of boundary conditions. The sole contribution to the loss function is from the residual error at interior collocation points."
+> "The proposed approach consistently outperforms a standard PINN-based collocation method."
+> Source: https://arxiv.org/pdf/2104.08426, Abstract and Section 1
+> Evidence: evidence/sukumar2022_exact_bc_distance.md
+> Domain-specific failure modes and hard BC examples: see [references/heat_exchanger.md](references/heat_exchanger.md).
+
+---
+
+## 5. Sampling and Collocation
+
+From NeuralPDE.jl:
+
+| Strategy | When to use |
+|---|---|
+| GridTraining(dx) | Small domains, smooth solutions |
+| StochasticTraining(N) | Default, re-sample each epoch |
+| QuasiRandomTraining(N) | Better coverage (Latin hypercube, Sobol) |
+| QuadratureTraining | Smooth, low-dimensional PDEs |
+| WeightedIntervalTraining | Stiff ODEs, emphasize hard sub-intervals |
+
+**Adaptive sampling** (residual-based): Sample more points where PDE residual is large. Helps with sharp features (phase change, shocks). But adds complexity.
+
+**Smoothness bias**: Monte Carlo approximation of the integral loss naturally biases solutions toward smooth functions (low-frequency modes dominate). This is partly regularization (helpful) and partly harmful (misses sharp features like phase-change fronts, shocks). Mitigations: residual-adaptive sampling, curriculum regularization starting with smooth regime, Fourier feature embeddings to reduce spectral bias.
+
+For 2D problems with radial integrals: use a regular grid in r (including r=0 and r=R) so torch.trapezoid / numpy.trapz can compute accurate integrals for conservation checks.
+
+**How many points?** Start with ~1000 collocation points. More helps accuracy but worsens conditioning (Section 3). The sweet spot depends on the problem.
+
+---
+
+## 6. Property Mappings & Multi-Episode Training
+
+> Domain-specific: differentiable EoS wrapping (REFPROP/PCHIP), IC handling for plant data, multi-episode training. See [references/heat_exchanger.md](references/heat_exchanger.md).
+
+---
+
+## 7. Validation and General ML Debugging
+
+### PINN-specific checks
+
+1. **Energy conservation**: |Q_in - Q_out| / Q_total < 1%. For 2D: check per axial slice.
+2. **Residual magnitude**: PDE residual should be near zero everywhere, not just on average. Plot residual vs (z, r).
+3. **BC satisfaction**: Check that BCs are actually satisfied. The BC loss being small doesn't mean the BC is satisfied if the residual loss dominates the gradient.
+4. **Physical reasonableness**: Does the temperature profile make physical sense? Is T_tube monotonically increasing? Is T_shell monotonically decreasing? Are there unphysical oscillations?
+5. **Compare to classical solver**: Solve the same problem with scipy solve_bvp. If the PINN disagrees, the PINN is probably wrong.
+
+### General ML debugging (from ml_debug folklore)
+
+These apply to PINNs too:
+
+**Work in order, don't skip to hyperparameters:**
+1. Verify components in isolation (forward pass shapes, loss computation by hand, data pipeline)
+2. Get signs of life on a toy problem (1D, known solution, constant Cp)
+3. Overfit to training data first. If you can't overfit, you can't generalize.
+4. Log everything: losses per component, gradient norms per module, parameter norms, activation stats
+5. Numerical localization: insert `assert torch.isfinite(x).all()` after successive stages. Once you find the first invalid operation, use a stable formula that matches the intended mathematical domain.
+
+**Symptom table** (adapted for PINNs):
+
+| Symptom | Likely cause |
+|---|---|
+| Loss stuck from the start | LR too low, bad init, wrong loss function, nondimensionalization missing |
+| Loss decreases then explodes | LR too high, numerical instability in property mappings |
+| Loss NaN | log(0), 0/0 in property mapping, temperature outside EoS range |
+| Physics loss low but BCs violated | Gradient imbalance (Section 4), need loss weighting |
+| U converges to 0 or bound | Degenerate solution (Section 4), check sign convention |
+| Model outputs constant | Dead neurons, vanishing gradients, U -> 0 |
+| Good train, bad test RMSE | Overfitting to collocation points, not enough physics constraint |
+| PINN worse than pure-data MLP | Wrong equations, bad scaling, or physics constraint fighting the data |
+
+**Gradient clipping masks problems.** Always log the pre-clip norm. If it's constantly triggered, fix the root cause (nondimensionalize, reduce LR, check for numerical issues).
+
+**Assume you have a bug.** Most of the time when a PINN doesn't work, it's a bug (sign error, wrong BC, missing factor of 2pi), not a hyperparameter issue.
+
+### Loss surface analysis (from ml_debug)
+
+When a loss term isn't working, don't guess -- visualize:
+1. Grid over 1-2 key axes (e.g., U and a temperature), compute loss + gradient at each point.
+2. Plot contour + quiver (negative gradient = optimization direction).
+3. Look for: dead zones (zero gradient), saddle points, competing gradients, scale imbalance.
+
+This takes 5 minutes and saves hours.
+
+---
+
+## 8. Multi-Loss Training Details
+
+If you must use multiple loss terms (and in PINNs you usually must):
+
+### ConFIG and UPGrad
+
+Both methods require separate per-loss gradients. The example below shows the ConFIG interface; TorchJD provides UPGrad and other aggregation methods.
+
+```python
+# Per-loss gradient capture (ConFIG requires this)
+for loss_fn in [L_pde, L_bc, L_data]:
+    optimizer.zero_grad()
+    loss = loss_fn(model, collocation_pts)
+    loss.backward()
+    grads.append(get_gradient_vector(model))
+
+# Combine via conflict-free direction
+combined_grad = ConFIG_update(grads, use_least_square=True)
+apply_gradient_vector(model, combined_grad)
+optimizer.step()
+```
+
+**Key rules:**
+- Don't pass summed loss into ConFIG. That defeats the purpose.
+- Use `lstsq` not `pinv` (more stable).
+- If some parameters don't participate in a loss, use `none_grad_mode='zero'`.
+- M-ConFIG (momentum variant): use SGD, NOT Adam. Momentum conflict.
+
+### Alternatives
+
+| Method | Pros | Cons |
+|---|---|---|
+| Naive sum | Simple | Gradient conflict, dominant terms drown others |
+| GradientScaleAdaptiveLoss | Built into NeuralPDE.jl | Heuristic, EMA lag |
+| ReLoBRaLo | Effective on benchmarks | More complex |
+| ConFIG | Conflict-free aggregate with a PINN-specific reference implementation | Per-loss backward required (2-3x cost) |
+| UPGrad | General gradient aggregation available in TorchJD | Per-loss backward required; limited PINN-specific comparative evidence |
+| Hard constraints | Eliminates BC loss entirely | Not always possible |
+
+> ConFIG authors report improvements over PCGrad and an Adam baseline on Burgers, Schrodinger, Kovasznay, and Beltrami. This is author-reported evidence, not a general comparison with UPGrad.
+> Source: https://tum-pbs.github.io/ConFIG/
+
+---
+
+## 9. Domain Decomposition (XPINNs)
+
+For large or geometrically complex domains, split into subdomains each with a local PINN. Interface conditions enforce continuity between subdomains.
+
+> Jagtap et al. 2020. "Extended physics-informed neural networks (XPINNs): A generalized space-time domain decomposition based deep learning framework for nonlinear partial differential equations." Commun. Comput. Phys. https://arxiv.org/pdf/2005.11025
+> Credence ~70%: Multiple citations, implemented in DeepXDE. Enables parallelization; each subdomain network is smaller and easier to optimize.
+> Key: interface residuals must be added as additional loss terms. Continuity of u and its normal derivative across interfaces.
+> Useful when the solution has different character in different regions (e.g., different phases, boundary layers).
+
+**Physics reparameterization**: Instead of learning u(x,t) from scratch, solve for the deviation from a known approximate solution: u(x,t) = u_approx(x,t) + delta(x,t), where the NN learns delta. If u_approx is good, delta is small and the landscape is smoother. The approximate solution can be the steady-state solution, a linearization, or a coarse numerical solution.
+
+## 10. PIKANs (Kolmogorov-Arnold Networks for PINNs)
+
+> Toscano et al. 2024: PIKANs "lead to smaller models and may also contribute to lowering computational cost while maintaining good accuracy."
+> Source: https://arxiv.org/pdf/2410.13228
+> Credence ~40%: New, no independent replication. Other authors focus on improving PINNs within the MLP framework, not validating PIKANs as an alternative. Interesting but unproven.
+
+---
+
+## 11. Derivative labels (Sobolev training)
+
+Use this section when the derivative is fitted to data: the gradient or Jacobian of a teacher
+network, a simulator's sensitivities, measured slopes. The equation-residual sections above still
+apply to the optimisation; what differs is that the derivative now has labels, with their own noise,
+units and coverage. Source: Czarnecki et al. 2017, "Sobolev Training for Neural Networks", NeurIPS,
+https://arxiv.org/abs/1706.04859; full text in
+[docs/evidence/czarnecki2017_sobolev_training.md](docs/evidence/czarnecki2017_sobolev_training.md).
+Line-break hyphens of the PDF are removed in the quotations.
+
+**What it is, and the cheap form with random projections** (Section 2):
+
+> This causes the neural network to encode derivatives of the target function in its own derivatives. Such a model can still be trained using backpropagation and off-the-shelf optimisers. A potential concern is that this optimisation might be expensive when either the output dimensionality of f or the order K are high, however one can reduce this cost through stochastic approximations. Specifically, if f is a multivariate function, instead of a vector gradient, one ends up with a full Jacobian matrix which can be large. To avoid adding computational complexity to the training process, one can use an efficient, stochastic version of Sobolev Training: instead of computing a full Jacobian/Hessian, one just computes its projection onto a random vector (a direct application of a known estimation trick [19]).
+
+Count the supervision in projections, not in data points: one random projection is one backward
+pass through the teacher and one row's worth of information about its Jacobian.
+
+**It works in both directions, and each term alone is a known method** (Section 4.3):
+
+> The previous experiments have shown how information about the derivatives can boost approximating function values. However, the core idea of Sobolev Training is broader than that, and can be employed in both directions. Namely, if one ultimately cares about approximating derivatives, then additionally approximating values can help this process too.
+
+> In particular, if we do not provide supervision on the gradient part, we end up with a loss critic. Similarly if we do not provide supervision at the loss level, but only on the gradient component, we end up in a method that resembles VFBN [25].
+
+So the three runs of TERMS item 1 (value only, derivative only, both) are three named methods, and
+the comparison between them is the experiment.
+
+**Value labels and derivative labels must agree** (Section 3, before Theorem 2):
+
+> This suggests that the Sobolev Training objective is achievable, and that we can seek to encode the values and derivatives of the target function in the values and derivatives of a ReLU neural network model. Interestingly, we can show that if we seek to encode an arbitrary function in the derivatives of the model then this is impossible not only for neural networks but also for any arbitrary differentiable predictor on compact sets.
+
+A value label and a derivative label that do not come from one function cannot both be fitted.
+Check that the derivative label is the derivative of the value label: with respect to the same
+input, with the same other inputs held, in the same units (DERIVATIVE items 4 and 5). When they
+are not, use two output heads, or change one label, and do not read the remaining error as a
+failure of the optimiser.
+
+**Field notes** (one project, 2026-11, not replicated; credence about 50% that each holds elsewhere):
+
+- A model fitted to values only has the derivative of a regression, which is not the teacher's
+  derivative. Do not expect a derivative from a value loss; measure it against the labels.
+- A derivative label at one point is noisier than a value label. The mean of the labels over
+  neighbouring points of the same trajectory was an easier target, and its fit served the
+  downstream use better. Errors against the raw and the averaged labels are not comparable
+  (NULL in `ml-debug`, "measured against").
+- An error on the derivative did not order models as the downstream use did. Decide by the use.
+- A model tied to one function (output = value, own derivative = slope) should be compared with
+  a two-head model on the same inputs and the same two targets. The difference is the cost of the
+  tie; see DERIVATIVE item 3 for one cause.
+
+## References
+
+### Derivative labels
+- Czarnecki et al. 2017. "Sobolev Training for Neural Networks." NeurIPS. https://arxiv.org/abs/1706.04859
+  - Key: fit the model's derivatives to the target's; random projections of the Jacobian; value-only and derivative-only as special cases; value and derivative targets must be consistent
+
+### Comprehensive guides (start here)
+- Wang et al. 2023. "An Expert's Guide to Training Physics-Informed Neural Networks." arXiv:2308.08468. https://arxiv.org/pdf/2308.08468
+  - Key: most thorough practical guide. Covers architecture (modified MLP), sampling, loss weighting, Fourier features, causal training, code. By the same group as 2021 paper.
+- Wang et al. 2021. "Understanding and mitigating gradient pathologies in physics-informed neural networks." SIAM J. Sci. Comput. https://arxiv.org/pdf/2001.04536
+  - Key: gradient imbalance diagnosis, learning rate annealing, modified MLP architecture
+
+### Loss landscape and optimization
+- Rathore et al. 2024. "Challenges in Training PINNs: A Loss Landscape Perspective." ICML. https://arxiv.org/pdf/2402.01868
+  - Key: Adam+L-BFGS, ill-conditioning from differential operators, near-zero loss required
+- Krishnapriyan et al. 2021. "Characterizing possible failure modes in physics-informed neural networks." NeurIPS. https://arxiv.org/pdf/2109.01050
+  - Key: curriculum regularization, seq2seq, failure is optimization not expressivity
+
+### Training strategies
+- Wang et al. 2022. "Respecting causality for training physics-informed neural networks." J. Comput. Phys. https://arxiv.org/pdf/2203.07404
+  - Key: causal weighting of temporal residuals, 10-100x improvement on chaotic systems, first PINN success on turbulence
+- Jagtap et al. 2020. "Extended Physics-Informed Neural Networks (XPINNs)." Commun. Comput. Phys. https://arxiv.org/pdf/2005.11025
+  - Key: domain decomposition, parallelizable, implemented in DeepXDE
+
+### Hard constraints and boundary conditions
+- Sukumar & Srivastava 2022. "Exact imposition of boundary conditions with distance functions in physics-informed deep neural networks." CMAME. https://arxiv.org/pdf/2104.08426
+  - Key: distance-function trial functions, eliminates BC loss, consistently outperforms soft BCs
+- Lagaris et al. 1998. "Artificial neural networks for solving ordinary and partial differential equations." IEEE Trans. Neural Netw. doi:10.1109/72.712178
+  - Key: original paper on hard BCs via trial functions. Sukumar 2022 is the modern extension.
+
+### Architecture and parameterization
+- Wang et al. 2022. "Random Weight Factorization Improves the Training of Continuous Neural Representations." https://arxiv.org/pdf/2210.01274
+  - Key: factorize w = s * w_unit, better local minima, used in PirateNet
+- Toscano et al. 2024. "From PINNs to PIKANs." https://arxiv.org/pdf/2410.13228
+- PirateNet / jaxpi: https://github.com/PredictiveIntelligenceLab/jaxpi (bundles RWF + causal + seq2seq + Fourier)
+- Ling et al. 2016. "Machine learning strategies for systems with invariance properties." J. Comput. Phys. https://doi.org/10.1016/j.jcp.2016.05.003
+  - Key: tensor-layer architecture enforcing Galilean invariance by construction for turbulence closure; symmetry-via-architecture beats symmetry-via-augmentation
+
+### Constrained optimization and physics-informed DMD
+- Baddoo et al. 2021. "Physics-informed dynamic mode decomposition." Proc. R. Soc. A. https://arxiv.org/pdf/2112.04307
+  - Key: restrict DMD to symmetry-preserving matrix manifolds (Hermitian, symplectic) via Procrustes problem; exactly satisfies conservation laws without penalty terms
+
+### Lecture series
+- Brunton, S. 2023. "AI/ML + Physics" YouTube lecture series. University of Washington.
+  - Part 1 (problem definition): https://www.youtube.com/watch?v=ARMk955pGbg
+  - Part 2 (training data): https://www.youtube.com/watch?v=g-S0m2zcKUg
+  - Part 3 (architecture): https://www.youtube.com/watch?v=fiX8c-4K0-Q
+  - Part 4 (loss function): https://www.youtube.com/watch?v=3SNkQ8jhKXc
+  - Part 5 (optimization): https://www.youtube.com/watch?v=T4iJ10TAIMg
+
+### Alternative formulations
+- Weinan E & Bing Yu 2018. "The Deep Ritz Method: A Deep Learning-Based Numerical Algorithm for Solving Variational Problems." Commun. Math. Stat. https://arxiv.org/pdf/1710.00211
+  - Key: energy minimization formulation instead of strong-form residuals. Better-conditioned for elliptic PDEs, can be easier to optimize since the loss is an energy (always positive, no cancellation).
+
+### Multi-loss training
+- Liu et al. 2024. "ConFIG: Towards Conflict-free Training of Physics Informed Neural Networks." https://tum-pbs.github.io/ConFIG/
+- Bischof & Kraus. "ReLoBRaLo: Relative Loss Balancing with Random Lookback."
+- TorchJD (UPGrad + aggregation methods): https://torchjd.org/stable/docs/aggregation/
+
+### General ML debugging
+- Schulman 2017. "Nuts and Bolts of Deep RL Experimentation." http://joschu.net/docs/nuts-and-bolts.pdf
+- Andy Jones 2021. "Debugging RL, Without the Agonizing Pain." https://andyljones.com/posts/rl-debugging.html
+
+### NeuralPDE.jl
+- Architecture, sampling, adaptive loss patterns from tests and docs.
+- https://github.com/SciML/NeuralPDE.jl

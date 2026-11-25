@@ -1,0 +1,151 @@
+# LLM-as-a-judge: 2026 literature review (varglite)
+
+Quote-anchored evidence for the operational rules of thumb in [llm_judges.md](llm_judges.md). Every `>` block is copy-pasteable from the cited source (ctrl-F-able); each was fetched from the raw HTML/README this turn unless flagged otherwise. Assembled 2026-07-23 (CLAUDE agent). Bare-quote cache with more sources (incl. summarizer-extracted numbers not safe to quote verbatim) lives in [../docs/evidence/llm_judge_biases.md](../docs/evidence/llm_judge_biases.md).
+
+Verify: **current LLM judges carry large, size-dependent biases (order, self-preference) and degrade on long inputs and over-long reasoning, so read outputs, swap order, cap reasoning to the task, and keep N small.**
+
+## Position and order bias
+
+## Lech Mazur, position_bias benchmark — [github README](https://github.com/lechmazur/position_bias)
+- last updated: not stated on the raw README; result set covers 2026-era models (GPT-5.4, Claude Opus 4.8, Kimi K2.5)
+
+> Across the 36-model result set, the model-average first-shown pick rate is 64.3%, with a median of 65.4%. **The model-average absolute first-position lift is 15.7 percentage points.** So the aggregate pattern is not a subtle tie-breaker: the displayed order materially changes many judgments.
+
+epistemic context: outsider-run public benchmark with a reproducible swapped-order harness (193 pairs, 36 models); no arXiv paper, the numbers are the raw output of the author's own runs. The headline order-flip figure elsewhere in the same README is "the model-average order-flip rate is 43.0%".
+
+## "Judging the Judges: A Systematic Study of Position Bias in LLM-as-a-Judge" — Shi et al. (Dartmouth), IJCNLP-AACL 2025 — [arXiv:2406.07791](https://arxiv.org/pdf/2406.07791)
+- page date: arXiv June 2024; IJCNLP-AACL 2025
+
+> The findings confirm that position bias is not due to random chance and varies significantly across judges and tasks. **While position bias is weakly influenced by the length of prompt components, it is strongly affected by the quality gap between solutions.** Our agreement and disagreement analysis among judges further provides insights into the distribution of judging difficulty across the dataset, and highlights the potential for dataset modifications.
+
+epistemic context: peer-reviewed; largest-scale dedicated position-bias study (over 150,000 evaluation instances, 15 judges, 22 tasks); "quality gap" here means the closer the two answers in quality, the more the judge flips on order. The abstract's counts moved across versions (v1-v3: 9 judges / 80,000 instances), and Section 3.1 of the current version still says "more than 100,000", contradicting its own abstract. Best judges in Table 2 reach position consistency 0.82, so ~18% of pairs flip on order even at the top.
+
+## "RLAIF vs. RLHF" — Lee et al. (Google), ICML 2024 — [arXiv:2309.00267](https://arxiv.org/pdf/2309.00267)
+- page date: arXiv Sept 2023; ICML 2024
+
+> We find evidence of position bias, which is especially prevalent in smaller LLM labelers (see Appendix B). **To mitigate the effect of position bias, two inferences are made for every pair of candidates, where the order in which candidates are presented to the LLM is reversed for the second inference.** The results from both inferences are then averaged to obtain the final preference distribution.
+
+epistemic context: peer-reviewed; the standard citation for both the "smaller = more position-biased" observation and the swap-and-average fix; per-size figures (PaLM-2 L/S/XS keep position 18/21/56% of the time) are in its Appendix B, not the quoted main text.
+
+## Self-preference scales inversely with judge size
+
+## "Beyond the Surface: Measuring Self-Preference in LLM Judgments" — Chen et al., EMNLP 2025 main — [arXiv:2506.02592](https://arxiv.org/pdf/2506.02592)
+- page date: arXiv June 2025; EMNLP 2025 main conference. Data + code: [github.com/zhiyuanc2001/self-preference](https://github.com/zhiyuanc2001/self-preference)
+
+> As observed in the figure, models larger than 7B exhibit significantly less self-preference bias compared to those of 7B or smaller. **For example, the DBG score of Qwen2.5-0.5B-Instruct is 41.7%. In contrast, the DBG score of Qwen2.5-14B-Instruct is only 2.1%.** This suggests that LLM judging tasks should utilize larger models to obtain more accurate and unbiased judgment results.
+
+epistemic context: peer-reviewed; the DBG (Difference-based Bias Gauge) score nets out genuine quality using gold judgments, so the residual is bias not skill. The same paper reports reasoning models still self-prefer ("not necessarily less" than non-reasoning), so reasoning is not a fix.
+
+## Reasoning judges: accuracy up, superficial bias not fixed
+
+## "JudgeLRM: Large Reasoning Models as a Judge" — Chen et al., 2025 — [arXiv:2504.00050](https://arxiv.org/pdf/2504.00050)
+- page date: arXiv April 2025
+
+> Empirical results demonstrate that JudgeLRM not only surpasses proprietary models like GPT-4 and DeepSeek-R1 but also outperforms SFT and RL baselines of comparable sizes, **with an average improvement of 8.14% in F1 score over SFT counterparts.**
+
+epistemic context: quoted from Section 1 (Introduction), v3; the 8.14% figure is not in any abstract version. Single-group result, not independently replicated. Table 3 backs the PandaLM claim: JudgeLRM-3B F1 72.12 vs GPT-4 61.80 on human ground truth, out of distribution. The abstract's own wording is "JudgeLRM-3B/4B exceeds GPT-4, while JudgeLRM-7B/8B/14B outperforms DeepSeek-R1 by over 2% in F1 score, with particularly strong gains on reasoning-heavy tasks", and it too has changed across versions (v1/v2 said 2.79%). Complementary finding from Huang et al. (arXiv:2601.03630): reasoning judges win on accuracy "particularly on reasoning-intensive tasks" but "still exhibit strong evaluation biases".
+
+## Overthinking: the reasoning-token budget is non-monotonic
+
+## "Does Thinking More always Help? ... Mirage of Test-Time Scaling in Reasoning Models" — Ghosal et al., 2025 — [arXiv:2506.04210](https://arxiv.org/pdf/2506.04210)
+- page date: arXiv June 2025
+
+> We observe an initial increase (similar to (Muennighoff et al., 2025; Aggarwal & Welleck, 2025)) in accuracy as the average thinking budget increases. **For example, in Figure 2(a), accuracy increases from 82.2% to 87.3% as the average number of thinking tokens increases from 385 to 1100.** However, this trend does not continue indefinitely.
+
+epistemic context: peer-review status unclear (preprint); the paper attributes the post-peak decline to output variance, not worse reasoning; the subagent-reported downstream figure (accuracy falls 87.3% -> 70.3% as tokens rise 1100 -> 15980) is in the body and not re-quoted verbatim here.
+
+## Reasoning-effort token budgets are a config choice, not a constant
+
+## CAIS `simple-evals` and litellm defaults — raw source, fetched 2026-07-23
+- [simple-evals/.env.example](https://github.com/centerforaisafety/simple-evals/blob/main/.env.example) and [litellm/constants.py](https://github.com/BerriAI/litellm/blob/main/litellm/constants.py)
+
+> # Some env for reasoning effort if you using litellm https://github.com/BerriAI/litellm/blob/main/litellm/constants.py#L81
+> DEFAULT_REASONING_EFFORT_HIGH_THINKING_BUDGET=24576
+> DEFAULT_REASONING_EFFORT_MEDIUM_THINKING_BUDGET=8192
+> DEFAULT_REASONING_EFFORT_LOW_THINKING_BUDGET=1024
+
+epistemic context: config lines quoted verbatim (not prose, so no surrounding sentences); CAIS's eval harness deliberately overrides litellm's stock defaults, whose own constants.py sets HIGH=4096, MEDIUM=2048, LOW=1024. So "effort=high" can mean 4096 or 24576 tokens depending on which mapping is live; setting effort on a judge without checking this can truncate its reasoning ~6x below what a serious harness allots.
+
+## Self-consistency: how many samples N
+
+## "Self-Consistency Is Losing Its Edge: Diminishing Returns and Rising Costs in Modern LLMs" — Loo, 2025 — [arXiv:2511.00751](https://arxiv.org/pdf/2511.00751)
+- page date: arXiv Oct 2025 (v2 May 2026)
+
+> **Results confirm that accuracy gains plateau early and, in some configurations, decline at high sample counts** — a pattern inconsistent with diminishing returns alone and more consistent with noise introduction on problems that were already solved. This suggests self-consistency should be reserved for genuinely difficult problems rather than applied as a default scaling strategy.
+
+> On MATH-500, Flash-Lite accuracy improved through approximately 10 sampled paths before plateauing and then declining slightly beyond 15, as shown in Figure 2. **This decline is notable: it suggests that once a model reliably solves most problems, additional samples introduce occasional wrong reasoning paths that the aggregator cannot fully suppress.**
+
+epistemic context: single-author preprint (low citation signal, flagged), and the author states AI tools assisted the drafting. Both quotes are from Section 1 and Section 4 of the raw PDF. The plateau is N~10-15 for Gemini-2.5-Flash-Lite on MATH-500, down from the ~40 of the original PaLM-540B-era self-consistency paper (Wang et al., arXiv:2203.11171); Gemini-2.5-Pro was only run to N=15 and did not decline. Sample sizes are small (Section 6: 250 rows for Flash-Lite). Sets a sane ceiling for a repeat-variance check: 4-10 passes is plenty, past ~15 buys nothing.
+
+## Context rot: long inputs and rubrics degrade judging
+
+## "NoLiMa: Long-Context Evaluation Beyond Literal Matching" — Modarressi et al., ICML 2025 — [arXiv:2502.05167](https://arxiv.org/pdf/2502.05167)
+- page date: arXiv Feb 2025; ICML 2025. Repo: [github.com/adobe-research/NoLiMa](https://github.com/adobe-research/NoLiMa)
+
+> While they perform well in short contexts (<1K), performance degrades significantly as context length increases. **At 32K, for instance, 11 models drop below 50% of their strong short-length baselines.** Even GPT-4o, one of the top-performing exceptions, experiences a reduction from an almost-perfect baseline of 99.3% to 69.7%.
+
+epistemic context: peer-reviewed; removes literal lexical overlap so the test measures latent-association retrieval, the closest analog to a judge matching a rubric to a semantically-distant answer. The paper defines "effective length as the maximum length at which the score remains above a threshold, set at 85% of the model's base score" (Table 3). Effective lengths are shorter than they sound: 1-4K tokens for most of the 13 models (median 2K), 8K for GPT-4o, and 16K for GPT-4.1 in the extended Table 10.
+
+## "Lost in the Middle: How Language Models Use Long Contexts" — Liu et al., TACL 2024 — [arXiv:2307.03172](https://arxiv.org/pdf/2307.03172)
+- page date: arXiv July 2023; TACL 2024
+
+> We find that performance can degrade significantly when changing the position of relevant information, indicating that current language models do not robustly make use of information in long input contexts. **In particular, we observe that performance is often highest when relevant information occurs at the beginning or end of the input context, and significantly degrades when models must access relevant information in the middle of long contexts, even for explicitly long-context models.** Our analysis provides a better understanding of how language models use their input context and provides new evaluation protocols for future long-context language models.
+
+epistemic context: peer-reviewed; the origin of the U-shaped/middle-penalty result, across 6 model families (MPT, LongChat, GPT-3.5, Claude, GPT-4, Llama-2; the last two are appendix-only subsets). Size of the effect, Section 2.3: "GPT-3.5-Turbo's multi-document QA performance can drop by more than 20% -- in the worst case, performance in 20- and 30-document settings is lower than performance without any input documents (i.e., closed-book performance; 56.1%)". Operational read for judging: put the rubric and the answer-under-test at the start or end of the prompt, never buried mid-way through a long reference block.
+
+## Machine-accessible judge benchmarks
+
+URLs resolve (checked by subagent via WebFetch); I have not curled every dataset. Pull data programmatically from these.
+
+| name | measures | data URL | notes |
+|---|---|---|---|
+| JudgeBench (2410.12784) | objective-correctness judge accuracy | [HF ScalerLab/JudgeBench](https://huggingface.co/datasets/ScalerLab/JudgeBench) | many strong judges near-random (~50%) |
+| RewardBench (2403.13787) | RM accuracy chat/safety/reasoning | [HF allenai/reward-bench](https://huggingface.co/datasets/allenai/reward-bench) | dedicated results dataset |
+| RewardBench 2 (2506.01937) | RM accuracy, harder unseen prompts | [HF allenai/reward-bench-2](https://huggingface.co/datasets/allenai/reward-bench-2) | ~20pt harder than v1 |
+| RM-Bench (2410.16184) | RM subtlety + style-bias robustness | [THU-KEG/RM-Bench](https://github.com/THU-KEG/RM-Bench) | SOTA ~46.6% under style bias |
+| PPE (2410.14872) | RM/judge vs real post-RLHF human prefs | [lmarena/PPE](https://github.com/lmarena/PPE) | 16k Arena pairs |
+| LLMBar (2310.07641) | adversarial instruction-following judge | [princeton-nlp/LLMBar](https://github.com/princeton-nlp/LLMBar) | 419 expert-agreed pairs |
+| CALM / Justice-or-Prejudice (2410.02736) | 12 cognitive-bias categories | [Y0oMu/LLM-Judge-Bias-Dataset](https://github.com/Y0oMu/LLM-Judge-Bias-Dataset) | mirror repo, lower provenance |
+| MT-Bench (2306.05685) | judge-human agreement, chat | [HF lmsys/mt_bench_human_judgments](https://huggingface.co/datasets/lmsys/mt_bench_human_judgments) | 3,755 human judgments |
+| Arena-Hard-Auto (2406.11939) | pairwise win-rate vs baseline | [lmarena/arena-hard-auto](https://github.com/lmarena/arena-hard-auto) | viewer glitchy, raw files OK |
+| JudgeLM (2310.17631) | fine-tuned judge vs GPT-4 | [HF BAAI/JudgeLM-100K](https://huggingface.co/datasets/BAAI/JudgeLM-100K) | 100k pairs |
+| PandaLM (2306.05087) | small judge vs GPT-3.5/4 | [WeOpenML/PandaLM](https://github.com/WeOpenML/PandaLM) | 7B recovers ~88-94% of frontier |
+| Judgemark v4 | judge score-separability, writing | [judgemark-v4.js](https://github.com/EQ-bench/EQ-bench-site/blob/main/judgemark-v4.js) | JS object, no arXiv paper |
+| JETTS (2504.15253) | judge for test-time scaling | [SalesforceAIResearch/jetts-benchmark](https://github.com/SalesforceAIResearch/jetts-benchmark) | rerank/beam/critique |
+| RewardMATH (2410.01729) | RM math robustness | [HF RewardMATH/RewardMATH](https://huggingface.co/datasets/RewardMATH/RewardMATH) | code repo anonymized |
+
+## Provider quality and structured output
+
+Added by PI/OpenAI from wassname's requested sources. These are a leaderboard, an empirical benchmark and a test tool, rather than three research papers. They inform provider selection; they do not directly measure judge accuracy or isolate quantisation as the cause of provider differences. The [2026-10-13 lookup report](../slop/research/20261013_tool_and_judge_accuracy.md) adds actual per-model provider BFCL scores, quantization evidence and moral-evaluator comparisons.
+
+### Artificial Analysis — [provider leaderboard](https://artificialanalysis.ai/leaderboards/providers), [Endpoint Accuracy Index methodology](https://artificialanalysis.ai/methodology/endpoint-accuracy-index)
+
+> The Endpoint Accuracy Index measures how the intelligence and capability of a specific model varies across a range of API providers who serve it. The same model served by different providers can behave differently depending on quantization, sampling defaults, context handling, token limits, prompt parsers and other endpoint-side configuration. To capture this, we re-run a fixed evaluation suite against each provider endpoint and report how closely the endpoint reproduces the model accuracy. We also use a self-hosted model deployment as a baseline, expressing each provider endpoint's overall accuracy score as a percentage of the baseline deployment. The index is designed so that 100% means an endpoint matches the reference, and lower scores indicate accuracy is lower compared to the baseline.
+
+Epistemic context: independent benchmarking service's own methodology, date not stated; the full leaderboard fetch exceeded the tool's 5 MB limit, so no current provider ranks are quoted here. Its [provider requirements](https://artificialanalysis.ai/methodology/performance-benchmarking#provider-requirements) require publicly available configurations and disclosure of version and precision on request.
+
+### Openbenchmarks — [Best LLM inference provider for tool-calling agents](https://openbenchmarks.com/inference/best-inference-provider-for-tool-calling)
+
+> Baseten led end-to-end p99 latency at 3.23 seconds; Telnyx and Fireworks AI led task success at 99.5%. The scorecard keeps latency, tokens per second, accuracy, and failures separate rather than blending them into one synthetic score. For tool-calling agents the complete structured result is the finish line; time to first token matters only when text is shown to a person first. Measured across 10 LLM inference providers serving GLM 5.3 Flash, 600 requests each, Sep 3, 2026.
+
+> Same request. One-turn, non-tool chat completion in JSON-object mode, streaming on, temperature 0, top-p 1, reasoning low, 256-token ceiling, 20-second timeout, concurrency one.
+
+Epistemic context: benchmark operator's reported measurements with [runner and per-request records](https://github.com/openbenchmarks-labs/inference). Despite the title, the measured workload uses JSON-object chat replies, not actual tool calls; its transfer to strict JSON Schema and judging needs care. In this same GLM run, the published table reports DeepInfra task success 95.5% and operational failures 4.0%; do not generalize that result to DeepInfra's DeepSeek endpoint.
+
+### Adam W Larson — [LLMToolCallingTester](https://github.com/adamwlarson/LLMToolCallingTester)
+
+> Semantic accuracy is too early to use as an indicator
+> Structural accuracy and Tool Recall are the primary metrics to look at currently
+
+Epistemic context: author's README warning (two adjacent bullets), date not stated. A reusable OpenAI-compatible tool-calling test harness with OpenRouter provider routing; the example output is not a controlled provider comparison. Retain the distinction between schema/structure correctness and semantic correctness when using its results.
+
+-- PI/OpenAI
+
+## Epistemic summary
+
+- **Who says X**: the "large, size-dependent bias" claim rests on three independent chains: an outsider benchmark measuring order-flip on 2026 models (Lech Mazur), an EMNLP paper measuring self-preference vs size with a quality-netted metric (2506.02592), and a Google paper reporting position bias rising as labeler size falls (2309.00267). The "long context / long reasoning both hurt" claim rests on NoLiMa + Lost-in-the-Middle (context) and Ghosal + Loo (reasoning tokens / samples).
+- **How they could know**: all direct measurement (repeated inference under swapped order, matched own-vs-other pairs, needle-retrieval at varied length, accuracy-vs-token-budget sweeps), not self-report.
+- **Entanglement check**: the bias sources are independent (different teams, years 2023-2026, metrics). The context-rot sources partly share lineage (NoLiMa explicitly builds on the Lost-in-the-Middle framing), so they stack less than they appear to; treat them as ~1.5 independent observations, not 2.
+- **Hard-to-vary check**: "bias is large" is hard to vary (a 43% flip rate is not reframable as noise). "Shrinks monotonically with size" is softer: 2506.02592 itself attributes the trend to capability, and a frontier reasoning model (GPT-5.4) still flips ~66% in Lech Mazur, so size alone does not guarantee low bias.
+- **What would change my mind (not-claim)**: under the null I would expect near-zero order-flip after swapping, flat DBG across 0.5B->72B, no benefit from swap-and-average, and flat accuracy across context length and thinking-token budget. None of these hold. The one genuine gap: no clean same-model with/without-retrieval judge ablation exists, so RAG-as-mitigation is untested, not refuted.
+- **Calibrated take**: qualitative claim (large order + self bias, mitigable by swap-and-average; long context and over-long reasoning both degrade judging) `p ≈ 0.90-0.97`. Specific "monotonically shrinks with size" `p ≈ 0.70-0.85` (capability confound). Cheapest way to be wrong: quote the 41.7%->2.1% size curve as if size is the lever when it may be capability, and assume a big judge is order-invariant. Safe rule: swap-and-average every judge regardless of size; treat "bigger/smarter judge" as a weak prior, not a fix.

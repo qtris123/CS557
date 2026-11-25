@@ -2,7 +2,7 @@
 #SBATCH -A scholar
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH -C a40
 #SBATCH --cpus-per-task=8
 #SBATCH --time=01:00:00
@@ -24,9 +24,11 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export TRITON_CACHE_DIR=/scratch/scholar/vo43/.triton
 export MASTER_ADDR=127.0.0.1
 export MASTER_PORT=29500
-export RANK=0
-export LOCAL_RANK=0
-export WORLD_SIZE=1
+# For 1 GPU, vLLM V1 uniproc requires these (uncomment if switching back to 1 GPU):
+# export RANK=0
+# export LOCAL_RANK=0
+# export WORLD_SIZE=1
+# For 2+ GPUs, Accelerate automatically assigns RANK, LOCAL_RANK, and WORLD_SIZE
 export VLLM_USE_V1=0
 
 echo "============================================"
@@ -37,6 +39,7 @@ echo "  GPU:       $CUDA_VISIBLE_DEVICES"
 echo "  Time:      $(date)"
 echo "============================================"
 
+nvidia-smi
 # Background GPU Monitor
 GPU_CSV="logs/gpu_monitor-${SLURM_JOB_ID}.csv"
 echo "timestamp,gpu_util_%,mem_used_MiB,mem_total_MiB,mem_util_%,temp_C,power_W" > "$GPU_CSV"
@@ -68,22 +71,25 @@ trap cleanup EXIT INT TERM
 
 start_gpu_monitor
 
-# Fast test run: 15 steps of GRPO on 1x A40 GPU
+# Fast test run: GRPO on A40 GPU(s)
+# Note:
+#   - For 1 GPU: set #SBATCH --gres=gpu:1, uncomment RANK/LOCAL_RANK/WORLD_SIZE above, set --num_processes 1
+#   - For 2 GPUs: set #SBATCH --gres=gpu:2, keep RANK/LOCAL_RANK/WORLD_SIZE commented, set --num_processes 2
 accelerate launch \
     --num_machines 1 \
     --dynamo_backend no \
     --mixed_precision bf16 \
-    --num_processes 1 \
+    --num_processes 2 \
     src/open_r1/grpo.py \
     --config recipes/Qwen2.5-1.5B-Instruct/grpo/config_demo.yaml \
     --vllm_mode colocate \
     --vllm_gpu_memory_utilization 0.3 \
-    --max_steps 15 \
+    --max_steps 30 \
     --num_generations 4 \
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 2 \
     --report_to none \
     --push_to_hub false \
-    --output_dir data/test-grpo-1.5b
+    --output_dir data/test-grpo-1.5b-2gpu
 
 echo "Job finished at: $(date)"

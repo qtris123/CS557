@@ -1,0 +1,8 @@
+numpy>=1.23
+torch>=2.0
+gymnasium[box2d,classic-control]==0.29.0
+matplotlib>=3.7
+moviepy==1.0.3
+imageio
+tqdm
+tensorboard>=2.10
